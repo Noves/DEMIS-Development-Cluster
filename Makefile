@@ -24,7 +24,6 @@ INFRASTRUCTURE_PATH := infrastructure
 APPLICATIONS_PATH := demis
 APPLICATIONS_ENV_FOLDER := demis
 DMZ_PATH := dmz
-DMZ_ENV_FOLDER := dmz
 IDM_PATH := idm
 MESH_PATH := mesh
 EKM_TEMPLATE_PATH := ekm-template
@@ -216,7 +215,7 @@ cleanup-services:
 
 .PHONY: dmz
 dmz: export WORKING_PATH=$(ROOT_DIR)/$(DMZ_PATH)
-dmz: export VAR_FILE_ARGS=$(shell make -s --no-print-directory get-var-file-args-for-folder MODULE=$(DMZ_ENV_FOLDER) STAGE=$(STAGE))
+dmz: export VAR_FILE_ARGS=$(shell make -s --no-print-directory get-var-file-args-for-folder MODULE=$(DMZ_PATH) STAGE=$(STAGE))
 dmz: init-dmz validate ## Deploys DMZ applications
 ifneq ($(target),)
 	$(eval TARGET_ARG="-target=$(target)")
@@ -232,8 +231,8 @@ endif
 
 .PHONY: cleanup-dmz
 cleanup-dmz: export WORKING_PATH=$(ROOT_DIR)/$(DMZ_PATH)
-cleanup-dmz: export VAR_FILE_ARGS=$(shell make -s --no-print-directory get-var-file-args-for-folder MODULE=$(DMZ_ENV_FOLDER) STAGE=$(STAGE))
-cleanup-dmz: export BACKEND_CONFIG_VARS=$(shell make -s --no-print-directory get-backend-config-args-for-folder MODULE=$(DMZ_ENV_FOLDER) STAGE=$(STAGE))
+cleanup-dmz: export VAR_FILE_ARGS=$(shell make -s --no-print-directory get-var-file-args-for-folder MODULE=$(DMZ_PATH) STAGE=$(STAGE))
+cleanup-dmz: export BACKEND_CONFIG_VARS=$(shell make -s --no-print-directory get-backend-config-args-for-folder MODULE=$(DMZ_PATH) STAGE=$(STAGE))
 cleanup-dmz:
 	cd $(WORKING_PATH)
 	$(eval GLOUD_TOKEN=$(shell gcloud auth print-access-token))
@@ -264,8 +263,8 @@ init-mesh: ## Initializes the Terraform Mesh components
 	$(TF_BIN) init -reconfigure -upgrade ${VAR_FILE_ARGS} ${BACKEND_CONFIG_VARS}
 	@echo "## Initialising the Mesh project done"
 
-init-dmz: export BACKEND_CONFIG_VARS=$(shell make -s --no-print-directory get-backend-config-args-for-folder MODULE=$(DMZ_ENV_FOLDER) STAGE=$(STAGE))
-init-dmz: export VAR_FILE_ARGS=$(shell make -s --no-print-directory get-var-file-args-for-folder MODULE=$(DMZ_ENV_FOLDER) STAGE=$(STAGE))
+init-dmz: export BACKEND_CONFIG_VARS=$(shell make -s --no-print-directory get-backend-config-args-for-folder MODULE=$(DMZ_PATH) STAGE=$(STAGE))
+init-dmz: export VAR_FILE_ARGS=$(shell make -s --no-print-directory get-var-file-args-for-folder MODULE=$(DMZ_PATH) STAGE=$(STAGE))
 init-dmz: ## Initializes the Terraform DMZ components
 	cd $(WORKING_PATH)
 	@echo "## Initialising the DMZ project"
@@ -369,6 +368,24 @@ init-stage:
 	@echo "## Initialising the stage repository"
 	@echo "## Stage Folder: $(ENV_FOLDER)"
 	@echo "## Stage: $(STAGE)"
+
+ifdef STAGE_BRANCH
+	@echo "## Using explicit branch: $(STAGE_BRANCH)"
+	if [ -d "$(ENV_FOLDER)" ]; then \
+		echo "Repository for $(STAGE) already present, try branch-aware git pull"; \
+		cd $(ENV_FOLDER) && \
+		echo "## Ensuring branch $(STAGE_BRANCH) is checked out"; \
+		git fetch origin $(STAGE_BRANCH) || exit 1; \
+		git checkout $(STAGE_BRANCH) || exit 1; \
+		echo "## Pulling latest changes from origin/$(STAGE_BRANCH)"; \
+		git pull origin $(STAGE_BRANCH) || exit 1; \
+	else \
+		echo "## Cloning $(STAGE_REPOSITORY) (branch: $(STAGE_BRANCH))"; \
+		git clone --branch $(STAGE_BRANCH) $(STAGE_REPOSITORY) $(ENV_FOLDER) || exit 1; \
+	fi
+
+else
+	@echo "## No STAGE_BRANCH set, using default behaviour"
 	if [ -d "$(ENV_FOLDER)" ]; then \
 		echo "Repository for $(STAGE) already present, try git pull" && \
 		cd $(ENV_FOLDER) && \
@@ -377,10 +394,12 @@ init-stage:
 			git pull || exit 1; \
 		else \
 			echo "No branch checked out, skip git pull"; \
-		fi \
+		fi; \
 	else \
 		git clone $(STAGE_REPOSITORY) $(ENV_FOLDER) || exit 1; \
 	fi
+endif
+
 	$(LOAD_EXTERNAL_SECRETS)
 
 
@@ -391,6 +410,7 @@ create-local-environment: local ## Creates a complete local environment
 	$(MAKE) local idm
 	@if [ "$${DEPLOY_DMZ:-}" = "true" ]; then $(MAKE) local dmz; fi
 	$(MAKE) local services
+    @if [ "$${DEPLOY_ARE:-}" = "true" ]; then $(MAKE) local are; fi
 
 .PHONY: cleanup-local-environment
 cleanup-local-environment: ## Destroys the local environment
@@ -572,4 +592,3 @@ chores: ## Runs all chores
 	@$(MAKE) checkov WORKING_PATH=$(APPLICATIONS_PATH)
 	@$(MAKE) checkov WORKING_PATH=$(IDM_PATH)
 	@$(MAKE) checkov WORKING_PATH=$(MESH_PATH)
-	@$(MAKE) checkov WORKING_PATH=$(DMZ_PATH)

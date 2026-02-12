@@ -31,17 +31,17 @@ variable "deployment_information" {
   validation {
     condition = alltrue([
       for name, service in var.deployment_information : true &&
-      (!can(length(service.canary.profiles)) || (can(length(service.canary.version) > 0) || !can(service.canary.weight >= 0 && service.canary.weight <= 100)))
+      (!service.enabled || contains(["validation-service-core", "validation-service-igs", "validation-service-ars", "futs-core", "futs-igs"], name) || (!contains(["validation-service-core", "validation-service-igs", "validation-service-ars", "futs-core", "futs-igs"], name) && !can(length(service.main.profiles)) && !can(length(service.canary.profiles))))
     ])
-    error_message = "Service Configuration is not valid. Please recheck versions for profiles syntax in validation-service-core. Canary needs to be defined with a version and weight."
+    error_message = "onyl Services validation-service-core, validation-service-igs, validation-service-ars, futs-core and futs-igs can have profiles defined."
   }
 }
 
 variable "profile_type" {
-  description = "Profile types for the validation services. Allowed values are: fhir-profile-snapshots, igs-profile-snapshots, ars-profile-snapshots"
+  description = "Profile types for the validation services. Allowed values are: fhir-profile-snapshots, igs-profile-snapshots, ars-profile-snapshots, demis-fhir-profile-snapshots, demis-igs-profile-snapshots, demis-ars-profile-snapshots"
   type        = string
   validation {
-    condition     = contains(["fhir-profile-snapshots", "igs-profile-snapshots", "ars-profile-snapshots"], var.profile_type)
+    condition     = contains(["fhir-profile-snapshots", "igs-profile-snapshots", "ars-profile-snapshots", "demis-fhir-profile-snapshots", "demis-igs-profile-snapshots", "demis-ars-profile-snapshots"], var.profile_type)
     error_message = "The profile type must be one of the following: fhir-profile-snapshots, igs-profile-snapshots, ars-profile-snapshots"
   }
 }
@@ -63,5 +63,16 @@ variable "provisioning_mode" {
   validation {
     condition     = contains(["dedicated", "distributed", "combined"], var.provisioning_mode)
     error_message = "The provisioning mode must be one of the following: dedicated, distributed, combined"
+  }
+}
+
+variable "api_version" {
+  description = "API version for the FHIR Profiles Metadata. Allowed values are: v1, v2"
+  type        = string
+  nullable    = false
+  default     = "v1"
+  validation {
+    condition     = contains(["v1", "v2"], var.api_version)
+    error_message = "The API version must be one of the following: v1, v2"
   }
 }
