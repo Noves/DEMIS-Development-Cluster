@@ -24,13 +24,18 @@ virtualServiceExternalHttpRules:
   - headers:
       request:
         set:
-          x-fhir-package: fhir-profile-snapshots
-          x-fhir-package-version: v${profile_major_version}
-          x-fhir-profile: fhir-profile-snapshots
-          x-fhir-api-version: v${profile_major_version}
-          x-api-version: v${profile_major_version}
           x-fhir-api-request-origin: internal
           x-fhir-api-submission-type: pathogen
+          x-fhir-package-version: v${package_laboratory_major_version}
+          x-fhir-api-version: v${package_laboratory_major_version}
+          x-api-version: v${package_laboratory_major_version}
+%{ if fhir_core_split_enabled == true ~}
+          x-fhir-profile: laboratory
+          x-fhir-package: laboratory
+%{ else ~}
+          x-fhir-package: fhir-profile-snapshots
+          x-fhir-profile: fhir-profile-snapshots
+%{ endif ~}
     match:
     - uri:
         prefix: ${context_path}/gateway/pathogen
@@ -39,13 +44,19 @@ virtualServiceExternalHttpRules:
   - headers:
       request:
         set:
-          x-fhir-package: fhir-profile-snapshots
-          x-fhir-package-version: v${profile_major_version}
-          x-fhir-profile: fhir-profile-snapshots
-          x-fhir-api-version: v${profile_major_version}
-          x-api-version: v${profile_major_version}
           x-fhir-api-request-origin: internal
           x-fhir-api-submission-type: disease
+          x-fhir-package-version: v${package_disease_major_version}
+          x-fhir-api-version: v${package_disease_major_version}
+          x-api-version: v${package_disease_major_version}
+%{ if fhir_core_split_enabled == true ~}
+          x-fhir-profile: disease
+          x-fhir-package: disease
+%{ else ~}
+
+          x-fhir-package: fhir-profile-snapshots
+          x-fhir-profile: fhir-profile-snapshots
+%{ endif ~}
     match:
     - uri:
         prefix: ${context_path}/gateway/disease
@@ -54,12 +65,17 @@ virtualServiceExternalHttpRules:
   - headers:
       request:
         set:
-          x-fhir-package: fhir-profile-snapshots
-          x-fhir-package-version: v${profile_major_version}
-          x-fhir-profile: fhir-profile-snapshots
-          x-fhir-api-version: v${profile_major_version}
-          x-api-version: v${profile_major_version}
           x-fhir-api-request-origin: internal
+          x-fhir-package-version: v${package_statistic_major_version}
+          x-fhir-api-version: v${package_statistic_major_version}
+          x-api-version: v${package_statistic_major_version}
+%{ if fhir_core_split_enabled == true ~}
+          x-fhir-profile: statistic
+          x-fhir-package: statistic
+%{ else ~}
+          x-fhir-package: fhir-profile-snapshots
+          x-fhir-profile: fhir-profile-snapshots
+%{ endif ~}
     match:
     - uri:
         prefix: ${context_path}/gateway/bedoccupancy

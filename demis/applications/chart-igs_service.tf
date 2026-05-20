@@ -44,8 +44,9 @@ module "igs_service" {
     cluster_gateway            = var.cluster_gateway,
     demis_hostnames            = local.demis_hostnames
     support_fhir_api_versions  = var.profile_provisioning_mode_vs_igs != null && var.profile_provisioning_mode_vs_igs != "dedicated"
-    fhir_api_versions          = module.validation_service_igs_metadata.current_profile_versions,
+    fhir_api_versions          = module.validation_service_igs_metadata[0].current_profile_versions,
     http_timeout_retry_block   = try(module.http_timeouts_retries.service_timeout_retry_definitions[local.igs_name], null)
     istio_rules_block_external = try(var.external_routing_configurations.rules[local.igs_name], [])
+    fhir_core_split_enabled    = local.fhir_core_split_enabled
   })
 }

@@ -39,9 +39,14 @@ virtualServiceExternalHttpRules:
         set:
           x-fhir-api-version: v${version}
           x-api-version: v${version}
-          x-fhir-profile: ars-profile-snapshots
           x-fhir-package-version: v${version}
-          x-fhir-package: fhir-profile-snapshots
+          %{ if fhir_core_split_enabled ~}
+          x-fhir-profile: ars
+          x-fhir-package: ars
+          %{else ~}
+          x-fhir-profile: ars-profile-snapshots
+          x-fhir-package: ars-profile-snapshots
+          %{endif ~}
     match:
       - uri:
           prefix: "${context_path}/surveillance/antibiotic-resistance/v${version}/batch"

@@ -83,7 +83,6 @@ No resources.
 | <a name="input_prometheus_service_url"></a> [prometheus\_service\_url](#input\_prometheus\_service\_url) | The Cluster-internal URL of the Prometheus Instance to be used | `string` | `"http://prometheus:9090"` | no |
 | <a name="input_security_namespace"></a> [security\_namespace](#input\_security\_namespace) | Defines the namespace for the Security-related services | `string` | `"security"` | no |
 | <a name="input_service_account_name"></a> [service\_account\_name](#input\_service\_account\_name) | The Service Account name to be configured | `string` | `"api-service-account"` | no |
-| <a name="input_service_mesh_enable_native_sidecar_injection"></a> [service\_mesh\_enable\_native\_sidecar\_injection](#input\_service\_mesh\_enable\_native\_sidecar\_injection) | Enable native sidecar injection for Istio (supported in Kubernetes 1.33.0+ and Istio 1.27.0+) | `bool` | `null` | no |
 | <a name="input_service_mesh_external_ip"></a> [service\_mesh\_external\_ip](#input\_service\_mesh\_external\_ip) | The external IP of the ingress gateway, only single IP is supported | `string` | `""` | no |
 | <a name="input_service_mesh_grafana_digest"></a> [service\_mesh\_grafana\_digest](#input\_service\_mesh\_grafana\_digest) | The digest of the Grafana Service to be used | `string` | `""` | no |
 | <a name="input_service_mesh_grafana_url"></a> [service\_mesh\_grafana\_url](#input\_service\_mesh\_grafana\_url) | The Cluster-internal URL of the Grafana Instance to be used | `string` | `"http://grafana:3000"` | no |

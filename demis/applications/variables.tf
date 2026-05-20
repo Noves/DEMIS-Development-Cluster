@@ -71,7 +71,7 @@ variable "deployment_information" {
   validation {
     condition = alltrue([
       for name, service in var.deployment_information : true &&
-      (!service.enabled || !contains(["validation-service-core", "validation-service-igs", "validation-service-ars", "futs-core"], name) || !can(length(service.main.profiles)) || can([for v in service.main.profiles : regex("^(([a-zA-Z]*-)*)?(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$", v)]))
+      (!service.enabled || !contains(["validation-service-core", "validation-service-bedoccupancy", "validation-service-disease", "validation-service-pathogen", "validation-service-igs", "validation-service-ars", "futs-core", "futs-bedoccupancy", "futs-disease", "futs-pathogen"], name) || !can(length(service.main.profiles)) || can([for v in service.main.profiles : regex("^(([a-zA-Z]*-)*)?(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$", v)]))
     ])
     error_message = "Service Configuration is not valid. Please recheck versions for profiles syntax in main."
   }
@@ -79,7 +79,7 @@ variable "deployment_information" {
   validation {
     condition = alltrue([
       for name, service in var.deployment_information : true &&
-      (!service.enabled || !contains(["validation-service-core", "validation-service-igs", "validation-service-ars", "futs-core"], name) || !can(length(service.canary.profiles)) || can([for v in service.canary.profiles : regex("^(([a-zA-Z]*-)*)?(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$", v)]))
+      (!service.enabled || !contains(["validation-service-core", "validation-service-bedoccupancy", "validation-service-disease", "validation-service-pathogen", "validation-service-igs", "validation-service-ars", "futs-core", "futs-bedoccupancy", "futs-disease", "futs-pathogen"], name) || !can(length(service.canary.profiles)) || can([for v in service.canary.profiles : regex("^(([a-zA-Z]*-)*)?(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$", v)]))
     ])
     error_message = "Service Configuration is not valid. Please recheck versions for profiles syntax in canary."
   }
@@ -87,9 +87,9 @@ variable "deployment_information" {
   validation {
     condition = alltrue([
       for name, service in var.deployment_information : true &&
-      (!service.enabled || contains(["validation-service-core", "validation-service-igs", "validation-service-ars", "futs-core", "futs-igs"], name) || (!contains(["validation-service-core", "validation-service-igs", "validation-service-ars", "futs-core", "futs-igs"], name) && !can(length(service.main.profiles)) && !can(length(service.canary.profiles))))
+      (!service.enabled || contains(["validation-service-core", "validation-service-bedoccupancy", "validation-service-disease", "validation-service-pathogen", "validation-service-igs", "validation-service-ars", "futs-core", "futs-bedoccupancy", "futs-disease", "futs-pathogen", "futs-igs"], name) || (!contains(["validation-service-core", "validation-service-igs", "validation-service-ars", "futs-core", "futs-igs"], name) && !can(length(service.main.profiles)) && !can(length(service.canary.profiles))))
     ])
-    error_message = "onyl Services validation-service-core, validation-service-igs, validation-service-ars, futs-core and futs-igs can have profiles defined."
+    error_message = "onyl Services validation-service-core, validation-service-igs, validation-service-ars, futs-core, futs-bedoccupancy, futs-disease, futs-pathogen and futs-igs can have profiles defined."
   }
 
   validation {
@@ -300,6 +300,12 @@ variable "debug_enabled" {
   default     = false
 }
 
+variable "mf_logging_enabled" {
+  type        = bool
+  description = "Defines if the microfronted Angular Services are starting with enabled console logging for debugging purposes"
+  default     = false
+}
+
 # PGBouncer Database Host
 variable "database_target_host" {
   type        = string
@@ -405,6 +411,36 @@ variable "profile_provisioning_mode_vs_ars" {
   nullable    = false
   validation {
     condition     = contains(["dedicated", "distributed", "combined"], var.profile_provisioning_mode_vs_ars)
+    error_message = "The provisioning mode must be one of the following: dedicated, distributed, combined"
+  }
+}
+
+variable "profile_provisioning_mode_vs_bedoccupancy" {
+  description = "Provisioning mode for the FHIR Profiles services. Allowed values are: dedicated, distributed, combined"
+  type        = string
+  nullable    = false
+  validation {
+    condition     = contains(["dedicated", "distributed", "combined"], var.profile_provisioning_mode_vs_bedoccupancy)
+    error_message = "The provisioning mode must be one of the following: dedicated, distributed, combined"
+  }
+}
+
+variable "profile_provisioning_mode_vs_disease" {
+  description = "Provisioning mode for the FHIR Profiles services. Allowed values are: dedicated, distributed, combined"
+  type        = string
+  nullable    = false
+  validation {
+    condition     = contains(["dedicated", "distributed", "combined"], var.profile_provisioning_mode_vs_disease)
+    error_message = "The provisioning mode must be one of the following: dedicated, distributed, combined"
+  }
+}
+
+variable "profile_provisioning_mode_vs_pathogen" {
+  description = "Provisioning mode for the FHIR Profiles services. Allowed values are: dedicated, distributed, combined"
+  type        = string
+  nullable    = false
+  validation {
+    condition     = contains(["dedicated", "distributed", "combined"], var.profile_provisioning_mode_vs_pathogen)
     error_message = "The provisioning mode must be one of the following: dedicated, distributed, combined"
   }
 }

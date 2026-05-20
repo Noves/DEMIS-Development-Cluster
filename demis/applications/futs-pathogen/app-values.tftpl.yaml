@@ -1,4 +1,7 @@
-# Values for the lifecycle-validation-service Helm Template
+# Values for futs-core.
+fullName: "futs-pathogen"
+fullnameOverride: "futs-pathogen"
+nameOverride: "futs-pathogen"
 
 # Enables debug mode
 debug:
@@ -7,15 +10,25 @@ debug:
 istio:
   enable: ${istio_enable}
 
+# Required Values for the Chart
 required:
-  image: 
+  image:
     repository: ${repository}
     %{ if strcontains(repository, "gematik1") }
-    name: demis-lifecycle-validation-service
+    name: demis-futs
     %{ endif }
+  profiles:
+    repository: ${profile_docker_registry}
+    packageName: rki.demis.laboratory.snapshots
+    %{ if strcontains(repository, "gematik1") }
+    name: demis-fhir-profile-snapshots
+    %{ else }
+    name: fhir-profile-snapshots
+    %{ endif }
+    version: ${profile_version}
 
 # Image Pull Secrets
-imagePullSecrets: 
+imagePullSecrets:
   %{~ for pull_secret in image_pull_secrets ~}
   - name: ${pull_secret}
   %{~ endfor ~}
@@ -23,9 +36,7 @@ imagePullSecrets:
 customEnvVars:
   # Prevents empty values that can delete the default environment variables
   TERRAFORM_DEPLOYMENT: true
-  LVS_CLIENT_DLS: http://destination-lookup-reader.${namespace}.svc.cluster.local
-  DEMIS_CODEMAPPING_BASE_URL: http://futs.${namespace}.svc.cluster.local
-  DEMIS_NETWORK_FUTS_CONTEXT_PATH: /
+  CONFIG_OPTION_PACKAGE_REGISTRY_URL: http://package-registry.${namespace}.svc.cluster.local
   %{~ for flag_name, flag_value in feature_flags ~}
   ${flag_name} : ${flag_value}
   %{~ endfor ~}

@@ -26,9 +26,13 @@ customEnvVars:
 # if production mode is true, hex-hex button won't be shown
 config:
   production: ${production_mode}
-  pathToFuts: ../../translation/ui-data-model/v${profile_major_version}/fhir
   futsPaths:
-    main: ../../translation/ui-data-model/v${profile_major_version}/fhir/disease
+    %{~ if fhir_core_split_enabled == true ~}
+    baseUrl: ../../translation/ui-data-model/disease/v${package_disease_major_version}/fhir
+    %{ else ~}
+    baseUrl: ../../translation/ui-data-model/v${package_disease_major_version}/fhir
+    %{ endif ~}
+
   featureFlags:
     # Prevents empty values that can delete the default environment variables
     "TERRAFORM_DEPLOYMENT": true
@@ -38,6 +42,10 @@ config:
     %{~ for config_name, config_value in config_options ~}
     "${config_name}" : ${config_value}
     %{~ endfor ~}
+
+  ngxLoggerConfig:
+    level: 1
+    disableConsoleLogging: ${mf_logging_disabled}
 
 %{~ if feature_flag_new_istio_sidecar_requests_and_limits && istio_proxy_resources != null ~}
 podAnnotations:

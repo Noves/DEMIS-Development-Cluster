@@ -38,9 +38,14 @@ virtualServiceExternalHttpRules:
       request:
         set:
           x-fhir-api-version: v${version}
-          x-fhir-profile: fhir-profile-snapshots
           x-fhir-package-version: v${version}
+%{ if fhir_core_split_enabled == true ~}
+          x-fhir-profile: statistic
+          x-fhir-package: statistic
+%{ else ~}
           x-fhir-package: fhir-profile-snapshots
+          x-fhir-profile: fhir-profile-snapshots
+%{ endif ~}
     match:
     - uri:
         prefix: ${context_path}/reports/bedoccupancy/v${version}/fhir/
@@ -57,6 +62,13 @@ virtualServiceExternalHttpRules:
         prefix: ${context_path}/reports/fhir/
     rewrite:
       uri: /
+%{ if fhir_core_split_enabled == true ~}
+    headers:
+      request:
+        set:
+          x-fhir-profile: statistic
+          x-fhir-package: statistic
+%{ endif ~}
 %{ if http_timeout_retry_block != null ~}
     ${indent(4, http_timeout_retry_block)}
 %{ endif ~}

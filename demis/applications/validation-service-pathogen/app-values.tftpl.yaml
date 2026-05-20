@@ -1,8 +1,8 @@
-# Values for the validation-service-core Helm Template
+# Values for the validation-service-pathogen Helm Template
 
-fullname: "validation-service-core"
-fullnameOverride: "validation-service-core"
-nameOverride: "validation-service-core"
+fullname: "validation-service-pathogen"
+fullnameOverride: "validation-service-pathogen"
+nameOverride: "validation-service-pathogen"
 
 # Enables debug mode
 debug:
@@ -17,9 +17,7 @@ required:
 %{ endif ~}
   profiles:
     repository: ${profile_docker_registry}
-    packageName: rki.demis.notification-api.snapshot
-    name: fhir-profile-snapshots
-    imageName: demis-fhir-profile-snapshots
+    packageName: rki.demis.laboratory.snapshots
     version: ${profile_version}
 %{ if length(profile_versions) > 0 ~}
     versions: 

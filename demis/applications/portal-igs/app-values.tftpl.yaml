@@ -36,6 +36,10 @@ config:
     "${config_name}" : ${config_value}
     %{~ endfor ~}
 
+  ngxLoggerConfig:
+    level: 1
+    disableConsoleLogging: ${mf_logging_disabled}
+
 %{~ if feature_flag_new_istio_sidecar_requests_and_limits && istio_proxy_resources != null ~}
 podAnnotations:
   sidecar.istio.io/proxyCPU: ${istio_proxy_resources.requests.cpu}

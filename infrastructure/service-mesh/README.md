@@ -27,7 +27,6 @@ No resources.
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_enable_native_sidecar_injection"></a> [enable\_native\_sidecar\_injection](#input\_enable\_native\_sidecar\_injection) | Enable native sidecar injection for Istio (supported in Kubernetes 1.33.0+ and Istio 1.27.0+) | `bool` | `null` | no |
 | <a name="input_external_ip"></a> [external\_ip](#input\_external\_ip) | The external IP of the ingress gateway, only single IP is supported | `string` | `""` | no |
 | <a name="input_grafana_digest"></a> [grafana\_digest](#input\_grafana\_digest) | The digest of the Grafana Service to be used | `string` | `"sha256:5781759b3d27734d4d548fcbaf60b1180dbf4290e708f01f292faa6ae764c5e6"` | no |
 | <a name="input_grafana_enabled"></a> [grafana\_enabled](#input\_grafana\_enabled) | Defines if Grafana has to be deployed | `bool` | `false` | no |

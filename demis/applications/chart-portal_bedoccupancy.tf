@@ -32,6 +32,7 @@ module "portal_bedoccupancy" {
     resource_block                                     = var.resource_definitions[local.portal_bedoccupancy_name].resource_block
     feature_flag_new_istio_sidecar_requests_and_limits = try(var.feature_flags[local.portal_bedoccupancy_name].FEATURE_FLAG_NEW_ISTIO_SIDECAR_REQUEST_AND_LIMITS, false),
     istio_proxy_resources                              = var.resource_definitions[local.portal_bedoccupancy_name].istio_proxy_resources
+    mf_logging_disabled                                = !var.mf_logging_enabled
   })
   istio_values = templatefile(local.portal_bedoccupancy_template_istio, {
     namespace                  = var.target_namespace,

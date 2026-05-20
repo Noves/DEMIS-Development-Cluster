@@ -20,7 +20,7 @@ required:
 %{ endif ~}
   profiles:
     repository: ${profile_docker_registry}
-    packageName: rki.demis.notification-api.snapshot
+    packageName: rki.demis.are.snapshots
     name: are-profile-snapshots
     imageName: demis-are-profile-snapshots
     version: ${profile_version}
@@ -40,7 +40,6 @@ imagePullSecrets:
 customEnvVars:
   # Prevents empty values that can delete the default environment variables
   TERRAFORM_DEPLOYMENT: true
-  CONFIG_OPTION_PACKAGE_REGISTRY_URL: http://package-registry.${namespace}.svc.cluster.local
 %{ for flag_name, flag_value in feature_flags ~}
   ${flag_name}: ${flag_value}
 %{ endfor ~}

@@ -29,6 +29,7 @@ IDM_PATH := idm
 MESH_PATH := mesh
 EKM_TEMPLATE_PATH := ekm-template
 ARE_PATH := are
+ARE_ENV_FOLDER := are
 GCP_SECRET_PREFIX :=
 TERRAFORM_EXTRA_ARGS := ${TF_EXTRA_ARGS}
 TARGET_ARG :=
@@ -307,7 +308,7 @@ init-ekm-template: ## Initializes the Terraform DEMIS Services
 
 .PHONY: are
 are: export WORKING_PATH=$(ROOT_DIR)/$(ARE_PATH)
-are: export VAR_FILE_ARGS=$(shell make -s --no-print-directory get-var-file-args-for-folder MODULE=$(ARE_PATH) STAGE=$(STAGE))
+are: export VAR_FILE_ARGS=$(shell make -s --no-print-directory get-var-file-args-for-folder MODULE=$(ARE_ENV_FOLDER) STAGE=$(STAGE))
 are: init-are validate ## Initializes the Terraform are service
 ifneq ($(target),)
 	$(eval TARGET_ARG="-target=$(target)")
@@ -323,8 +324,8 @@ endif
 
 .PHONY: cleanup-are
 cleanup-are: export WORKING_PATH=$(ROOT_DIR)/$(ARE_PATH)
-cleanup-are: export VAR_FILE_ARGS=$(shell make -s --no-print-directory get-var-file-args-for-folder MODULE=$(ARE_PATH) STAGE=$(STAGE))
-cleanup-are: export BACKEND_CONFIG_VARS=$(shell make -s --no-print-directory get-backend-config-args-for-folder MODULE=$(ARE_PATH) STAGE=$(STAGE))
+cleanup-are: export VAR_FILE_ARGS=$(shell make -s --no-print-directory get-var-file-args-for-folder MODULE=$(ARE_ENV_FOLDER) STAGE=$(STAGE))
+cleanup-are: export BACKEND_CONFIG_VARS=$(shell make -s --no-print-directory get-backend-config-args-for-folder MODULE=$(ARE_ENV_FOLDER) STAGE=$(STAGE))
 cleanup-are:
 	cd $(WORKING_PATH)
 	$(eval GLOUD_TOKEN=$(shell gcloud auth print-access-token))
@@ -332,8 +333,8 @@ cleanup-are:
 	$(TF_BIN) init -reconfigure -upgrade ${VAR_FILE_ARGS} ${BACKEND_CONFIG_VARS}
 	$(TF_BIN) destroy -var=google_cloud_access_token=$(GLOUD_TOKEN) ${VAR_FILE_ARGS} $(TERRAFORM_EXTRA_ARGS)
 
-init-are: export BACKEND_CONFIG_VARS=$(shell make -s --no-print-directory get-backend-config-args-for-folder MODULE=$(ARE_PATH) STAGE=$(STAGE))
-init-are: export VAR_FILE_ARGS=$(shell make -s --no-print-directory get-var-file-args-for-folder MODULE=$(ARE_PATH) STAGE=$(STAGE))
+init-are: export BACKEND_CONFIG_VARS=$(shell make -s --no-print-directory get-backend-config-args-for-folder MODULE=$(ARE_ENV_FOLDER) STAGE=$(STAGE))
+init-are: export VAR_FILE_ARGS=$(shell make -s --no-print-directory get-var-file-args-for-folder MODULE=$(ARE_ENV_FOLDER) STAGE=$(STAGE))
 init-are: ## Initializes the Terraform DEMIS Services
 	cd $(WORKING_PATH)
 	@echo "## Initialising are"

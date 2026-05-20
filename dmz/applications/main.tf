@@ -21,4 +21,6 @@ locals {
     reset_values                  = var.reset_values
     deployment_timeout            = var.deployment_timeout
   }
+
+  fhir_core_split_enabled = try(var.project_feature_flags["FEATURE_FLAG_FHIR_CORE_SPLIT"], false)
 }

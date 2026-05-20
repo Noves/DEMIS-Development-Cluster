@@ -9,6 +9,12 @@ variable "debug_enabled" {
   default     = false
 }
 
+variable "mf_logging_enabled" {
+  type        = bool
+  description = "Defines if the microfronted Angular Services are starting with enabled console logging for debugging purposes"
+  default     = false
+}
+
 # PGBouncer Database Host
 variable "database_target_host" {
   type        = string
@@ -109,6 +115,36 @@ variable "profile_provisioning_mode_vs_ars" {
   default     = "combined"
   validation {
     condition     = contains(["dedicated", "distributed", "combined"], var.profile_provisioning_mode_vs_ars)
+    error_message = "The provisioning mode must be one of the following: dedicated, distributed, combined"
+  }
+}
+
+variable "profile_provisioning_mode_vs_bedoccupancy" {
+  description = "Provisioning mode for the FHIR Profiles services. Allowed values are: dedicated, distributed, combined"
+  type        = string
+  default     = "combined"
+  validation {
+    condition     = contains(["dedicated", "distributed", "combined"], var.profile_provisioning_mode_vs_bedoccupancy)
+    error_message = "The provisioning mode must be one of the following: dedicated, distributed, combined"
+  }
+}
+
+variable "profile_provisioning_mode_vs_disease" {
+  description = "Provisioning mode for the FHIR Profiles services. Allowed values are: dedicated, distributed, combined"
+  type        = string
+  default     = "combined"
+  validation {
+    condition     = contains(["dedicated", "distributed", "combined"], var.profile_provisioning_mode_vs_disease)
+    error_message = "The provisioning mode must be one of the following: dedicated, distributed, combined"
+  }
+}
+
+variable "profile_provisioning_mode_vs_pathogen" {
+  description = "Provisioning mode for the FHIR Profiles services. Allowed values are: dedicated, distributed, combined"
+  type        = string
+  default     = "combined"
+  validation {
+    condition     = contains(["dedicated", "distributed", "combined"], var.profile_provisioning_mode_vs_pathogen)
     error_message = "The provisioning mode must be one of the following: dedicated, distributed, combined"
   }
 }

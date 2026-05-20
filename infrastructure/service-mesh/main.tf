@@ -1,15 +1,14 @@
 module "istio" {
-  source                          = "./istio"
-  chart_version                   = var.istio_version
-  local_deployment                = var.local_deployment
-  local_node_ports_istio          = var.local_node_ports_istio
-  namespace                       = var.namespace
-  trace_sampling                  = var.trace_sampling
-  replica_count                   = var.istio_replica_count
-  external_ip                     = var.external_ip
-  ingress_annotations             = var.ingress_annotations
-  loadbalancer_sourceranges       = var.loadbalancer_sourceranges
-  enable_native_sidecar_injection = coalesce(var.enable_native_sidecar_injection, false)
+  source                    = "./istio"
+  chart_version             = var.istio_version
+  local_deployment          = var.local_deployment
+  local_node_ports_istio    = var.local_node_ports_istio
+  namespace                 = var.namespace
+  trace_sampling            = var.trace_sampling
+  replica_count             = var.istio_replica_count
+  external_ip               = var.external_ip
+  ingress_annotations       = var.ingress_annotations
+  loadbalancer_sourceranges = var.loadbalancer_sourceranges
 }
 
 module "kiali" {

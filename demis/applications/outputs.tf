@@ -30,17 +30,32 @@ output "spp_ars_enabled" {
 
 output "fhir_profile_snapshots" {
   description = "Version of the FHIR Profile Snapshots being used"
-  value       = length(tolist(module.validation_service_core_metadata.current_profile_versions)) > 0 ? "[${join(", ", tolist(module.validation_service_core_metadata.current_profile_versions))}]" : local.fhir_profile_snapshots
+  value       = local.vs_core_enabled && length(tolist(module.validation_service_core_metadata[0].current_profile_versions)) > 0 ? "[${join(", ", tolist(module.validation_service_core_metadata[0].current_profile_versions))}]" : local.fhir_profile_snapshots
 }
 
 output "igs_profile_snapshots" {
   description = "Version of the IGS Profile Snapshots being used"
-  value       = length(tolist(module.validation_service_igs_metadata.current_profile_versions)) > 0 ? "[${join(", ", tolist(module.validation_service_igs_metadata.current_profile_versions))}]" : local.igs_profile_snapshots
+  value       = local.vs_igs_enabled && length(tolist(module.validation_service_igs_metadata[0].current_profile_versions)) > 0 ? "[${join(", ", tolist(module.validation_service_igs_metadata[0].current_profile_versions))}]" : local.igs_profile_snapshots
 }
 
 output "ars_profile_snapshots" {
   description = "Version of the ARS Profile Snapshots being used"
-  value       = length(tolist(module.validation_service_ars_metadata.current_profile_versions)) > 0 ? "[${join(", ", tolist(module.validation_service_ars_metadata.current_profile_versions))}]" : local.ars_profile_snapshots
+  value       = local.vs_ars_enabled && length(tolist(module.validation_service_ars_metadata[0].current_profile_versions)) > 0 ? "[${join(", ", tolist(module.validation_service_ars_metadata[0].current_profile_versions))}]" : local.ars_profile_snapshots
+}
+
+output "statistic_package_versions" {
+  description = "Version of the statistic package being used"
+  value       = local.vs_bedoccupancy_enabled && length(tolist(module.validation_service_bedoccupancy_metadata[0].current_profile_versions)) > 0 ? "[${join(", ", tolist(module.validation_service_bedoccupancy_metadata[0].current_profile_versions))}]" : local.fhir_profile_snapshots
+}
+
+output "disease_package_versions" {
+  description = "Version of the disease package being used"
+  value       = local.vs_disease_enabled && length(tolist(module.validation_service_disease_metadata[0].current_profile_versions)) > 0 ? "[${join(", ", tolist(module.validation_service_disease_metadata[0].current_profile_versions))}]" : local.fhir_profile_snapshots
+}
+
+output "laboratory_package_versions" {
+  description = "Version of the statistic package being used"
+  value       = local.vs_pathogen_enabled && length(tolist(module.validation_service_pathogen_metadata[0].current_profile_versions)) > 0 ? "[${join(", ", tolist(module.validation_service_pathogen_metadata[0].current_profile_versions))}]" : local.fhir_profile_snapshots
 }
 
 output "version_istio_routing_chart" {
