@@ -45,6 +45,3 @@ podAnnotations:
 cni:
   enabled: true
   provider: default
-
-env:
-  ENABLE_NATIVE_SIDECARS: ${enable_native_sidecars}

@@ -27,6 +27,7 @@ module "demis_services" {
   s3_hostname                                     = var.s3_hostname
   s3_port                                         = var.s3_port
   debug_enabled                                   = var.debug_enabled
+  mf_logging_enabled                              = var.mf_logging_enabled
   istio_enabled                                   = var.istio_enabled
   context_path                                    = var.context_path
   feature_flags                                   = module.application_flags.service_feature_flags
@@ -36,6 +37,9 @@ module "demis_services" {
   profile_provisioning_mode_vs_core               = var.profile_provisioning_mode_vs_core
   profile_provisioning_mode_vs_igs                = var.profile_provisioning_mode_vs_igs
   profile_provisioning_mode_vs_ars                = var.profile_provisioning_mode_vs_ars
+  profile_provisioning_mode_vs_bedoccupancy       = var.profile_provisioning_mode_vs_bedoccupancy
+  profile_provisioning_mode_vs_disease            = var.profile_provisioning_mode_vs_disease
+  profile_provisioning_mode_vs_pathogen           = var.profile_provisioning_mode_vs_pathogen
   reset_values                                    = var.reset_values
   deployment_timeout                              = var.deployment_timeout
   external_routing_configurations                 = try(module.external_routing_configurations[0], { rules = {} })

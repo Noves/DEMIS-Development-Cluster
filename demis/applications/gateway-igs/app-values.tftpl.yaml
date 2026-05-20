@@ -25,6 +25,7 @@ customEnvVars:
   IGS_SERVICE_URL_PUBLIC: "https://${core_hostname}/surveillance/notification-sequence"
   IGS_SERVICE_URL: "http://igs-service.${namespace}.svc.cluster.local/surveillance/notification-sequence"
   IGS_PROFILE_VERSION: "v${igs_profile_major_version}"
+  IGS_PACKAGE_NAME: "${igs_package_name}"
   FUTS_IGS_URL: "http://futs.${namespace}.svc.cluster.local"
   %{~ for flag_name, flag_value in feature_flags ~}
   ${flag_name} : ${flag_value}

@@ -2,6 +2,18 @@
 
 # Release Notes DEMIS Kubernetes Environment
 
+## Release 5.8.0
+- added ARE deployment targets for TEST-Stage
+- changed ARE FHIR package name
+- added Helm release for Istio network policies to ARE
+- split futs-core in futs-bedoccupancy, futs-disease and futs-pathogen
+- split validation-service-core in validation-service-bedoccupancy, validation-service-disease and validation-service-pathogen
+- fixed validation for WIF
+- removed CONFIG_OPTION_PACKAGE_REGISTRY_URL from Validation Service and moved to Stage Configuration
+- removed variable enable_native_sidecar_injection
+  - now native sidecar injection mode for istio is handled by istio (default true)
+- added mf_logging_enabled variable for enabling logging in microfrontend framework
+
 ## Release 5.7.0
 - removed dependency for gematik-idp to pg-bouncer in local
 - removed deployment pipelines from project
@@ -9,9 +21,9 @@
 - added encryption keys for in-queue and secure-queue for services BIS, SMG and ARS
 - refactored modules fhir-profile-metadata and maintenance_mode for planning completely resources in application moduls
 - added Validation Service with Delegation for ARE
-- added istio_routing_configurations module for are
-- fixed remote backend configuration for are deployment
-- fixed Kyverno policies for are deployment
+- added istio_routing_configurations module for ARE
+- fixed remote backend configuration for ARE deployment
+- fixed Kyverno policies for ARE deployment
 
 ## Release 5.6.0
 - updated the release pipeline to automatically add new versions
@@ -38,7 +50,7 @@
 - update Database Pipeline for location switching and add surveillance-pseudonym-service-ars, ars-service to restart list
 - simplified ARS/BIS virtual service configuration
 - changed PROD-FKB postgres host in switchDatabase.sh
-- fixed restart all services for test stages and including handling for dmz and are namespaces
+- fixed restart all services for test stages and including handling for dmz and ARE namespaces
 - fixed service dependencies in the dmz namespace
 - added new module istio_routing_configurations for define to create istio routing rules by yaml file
 - added pgbouncer to dependency to ars-service
@@ -116,7 +128,7 @@
 - fixed 'all' keyword for feature flags and configs
 - fixed Jaeger Resource requests and limits 
 - added fhir-profiles-metadata module for services futs-core and futs-igs
-- added validation for services are allowed to define profiles in active versions file
+- added validation for services ARE allowed to define profiles in active versions file
 - modified deployment order. Now services validation-service-core, validation-service-igs, validation-service-ars, futs-core and futs-igs depends on package-registry.
 
 ## Release 4.4.0

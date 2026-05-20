@@ -31,4 +31,6 @@ locals {
   ars_profile_snapshots = var.deployment_information["ars-profile-snapshots"].main.version
   # The version of the Routing Data to use
   routing_data_version = var.deployment_information["notification-routing-data"].main.version
+  # FEATURE_FLAG_FHIR_CORE_SPLIT
+  fhir_core_split_enabled = try(var.project_feature_flags["FEATURE_FLAG_FHIR_CORE_SPLIT"], false)
 }

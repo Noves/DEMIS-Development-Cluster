@@ -39,8 +39,9 @@ module "report_processing_service" {
     cluster_gateway            = var.cluster_gateway,
     core_hostname              = var.core_hostname
     support_fhir_api_versions  = var.profile_provisioning_mode_vs_core != null && var.profile_provisioning_mode_vs_core != "dedicated"
-    fhir_api_versions          = module.validation_service_core_metadata.current_profile_versions
+    fhir_api_versions          = local.fhir_core_split_enabled ? module.validation_service_bedoccupancy_metadata[0].current_profile_versions : module.validation_service_core_metadata[0].current_profile_versions
     http_timeout_retry_block   = try(module.http_timeouts_retries.service_timeout_retry_definitions[local.rps_name], null)
     istio_rules_block_external = try(var.external_routing_configurations.rules[local.rps_name], [])
+    fhir_core_split_enabled    = local.fhir_core_split_enabled
   })
 }

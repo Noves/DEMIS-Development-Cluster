@@ -23,10 +23,16 @@ Module responsible for deploying the DEMIS Services Helm Charts in a Kubernetes 
 | <a name="module_fhir_storage_purger"></a> [fhir\_storage\_purger](#module\_fhir\_storage\_purger) | ../../modules/helm_deployment | n/a |
 | <a name="module_fhir_storage_reader"></a> [fhir\_storage\_reader](#module\_fhir\_storage\_reader) | ../../modules/helm_deployment | n/a |
 | <a name="module_fhir_storage_writer"></a> [fhir\_storage\_writer](#module\_fhir\_storage\_writer) | ../../modules/helm_deployment | n/a |
+| <a name="module_futs_bedoccupancy"></a> [futs\_bedoccupancy](#module\_futs\_bedoccupancy) | ../../modules/helm_deployment | n/a |
+| <a name="module_futs_bedoccupancy_metadata"></a> [futs\_bedoccupancy\_metadata](#module\_futs\_bedoccupancy\_metadata) | ../../modules/fhir-profiles-metadata | n/a |
 | <a name="module_futs_core"></a> [futs\_core](#module\_futs\_core) | ../../modules/helm_deployment | n/a |
 | <a name="module_futs_core_metadata"></a> [futs\_core\_metadata](#module\_futs\_core\_metadata) | ../../modules/fhir-profiles-metadata | n/a |
+| <a name="module_futs_disease"></a> [futs\_disease](#module\_futs\_disease) | ../../modules/helm_deployment | n/a |
+| <a name="module_futs_disease_metadata"></a> [futs\_disease\_metadata](#module\_futs\_disease\_metadata) | ../../modules/fhir-profiles-metadata | n/a |
 | <a name="module_futs_igs"></a> [futs\_igs](#module\_futs\_igs) | ../../modules/helm_deployment | n/a |
 | <a name="module_futs_igs_metadata"></a> [futs\_igs\_metadata](#module\_futs\_igs\_metadata) | ../../modules/fhir-profiles-metadata | n/a |
+| <a name="module_futs_pathogen"></a> [futs\_pathogen](#module\_futs\_pathogen) | ../../modules/helm_deployment | n/a |
+| <a name="module_futs_pathogen_metadata"></a> [futs\_pathogen\_metadata](#module\_futs\_pathogen\_metadata) | ../../modules/fhir-profiles-metadata | n/a |
 | <a name="module_gateway_igs"></a> [gateway\_igs](#module\_gateway\_igs) | ../../modules/helm_deployment | n/a |
 | <a name="module_hospital_location_service"></a> [hospital\_location\_service](#module\_hospital\_location\_service) | ../../modules/helm_deployment | n/a |
 | <a name="module_http_timeouts_retries"></a> [http\_timeouts\_retries](#module\_http\_timeouts\_retries) | ../../modules/http_timeouts_retries | n/a |
@@ -52,10 +58,16 @@ Module responsible for deploying the DEMIS Services Helm Charts in a Kubernetes 
 | <a name="module_terminology_server"></a> [terminology\_server](#module\_terminology\_server) | ../../modules/helm_deployment | n/a |
 | <a name="module_validation_service_ars"></a> [validation\_service\_ars](#module\_validation\_service\_ars) | ../../modules/helm_deployment | n/a |
 | <a name="module_validation_service_ars_metadata"></a> [validation\_service\_ars\_metadata](#module\_validation\_service\_ars\_metadata) | ../../modules/fhir-profiles-metadata | n/a |
+| <a name="module_validation_service_bedoccupancy"></a> [validation\_service\_bedoccupancy](#module\_validation\_service\_bedoccupancy) | ../../modules/helm_deployment | n/a |
+| <a name="module_validation_service_bedoccupancy_metadata"></a> [validation\_service\_bedoccupancy\_metadata](#module\_validation\_service\_bedoccupancy\_metadata) | ../../modules/fhir-profiles-metadata | n/a |
 | <a name="module_validation_service_core"></a> [validation\_service\_core](#module\_validation\_service\_core) | ../../modules/helm_deployment | n/a |
 | <a name="module_validation_service_core_metadata"></a> [validation\_service\_core\_metadata](#module\_validation\_service\_core\_metadata) | ../../modules/fhir-profiles-metadata | n/a |
+| <a name="module_validation_service_disease"></a> [validation\_service\_disease](#module\_validation\_service\_disease) | ../../modules/helm_deployment | n/a |
+| <a name="module_validation_service_disease_metadata"></a> [validation\_service\_disease\_metadata](#module\_validation\_service\_disease\_metadata) | ../../modules/fhir-profiles-metadata | n/a |
 | <a name="module_validation_service_igs"></a> [validation\_service\_igs](#module\_validation\_service\_igs) | ../../modules/helm_deployment | n/a |
 | <a name="module_validation_service_igs_metadata"></a> [validation\_service\_igs\_metadata](#module\_validation\_service\_igs\_metadata) | ../../modules/fhir-profiles-metadata | n/a |
+| <a name="module_validation_service_pathogen"></a> [validation\_service\_pathogen](#module\_validation\_service\_pathogen) | ../../modules/helm_deployment | n/a |
+| <a name="module_validation_service_pathogen_metadata"></a> [validation\_service\_pathogen\_metadata](#module\_validation\_service\_pathogen\_metadata) | ../../modules/fhir-profiles-metadata | n/a |
 
 ## Resources
 
@@ -73,9 +85,6 @@ Module responsible for deploying the DEMIS Services Helm Charts in a Kubernetes 
 | [kubernetes_secret_v1.rabbit_mq_credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
 | [kubernetes_secret_v1.redis_cus_reader_credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
 | [kubernetes_secret_v1.service_accounts](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
-| [terraform_data.validation_service_ars_http_rules](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) | resource |
-| [terraform_data.validation_service_core_http_rules](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) | resource |
-| [terraform_data.validation_service_igs_http_rules](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) | resource |
 
 ## Inputs
 
@@ -110,6 +119,7 @@ Module responsible for deploying the DEMIS Services Helm Charts in a Kubernetes 
 | <a name="input_keycloak_internal_hostname"></a> [keycloak\_internal\_hostname](#input\_keycloak\_internal\_hostname) | The URL to the Keycloak Service in the internal network | `string` | `"keycloak.idm.svc.cluster.local"` | no |
 | <a name="input_maintenance_mode_trigger"></a> [maintenance\_mode\_trigger](#input\_maintenance\_mode\_trigger) | Output from module.activate\_maintenance\_mode that establishes deploy ordering without known-after-apply propagation. | `string` | `""` | no |
 | <a name="input_meldung_hostname"></a> [meldung\_hostname](#input\_meldung\_hostname) | The URL for accessing the DEMIS Notification Portal over Internet | `string` | `"meldung"` | no |
+| <a name="input_mf_logging_enabled"></a> [mf\_logging\_enabled](#input\_mf\_logging\_enabled) | Defines if the microfronted Angular Services are starting with enabled console logging for debugging purposes | `bool` | `false` | no |
 | <a name="input_minio_root_password"></a> [minio\_root\_password](#input\_minio\_root\_password) | The Minio Root Password | `string` | n/a | yes |
 | <a name="input_minio_root_user"></a> [minio\_root\_user](#input\_minio\_root\_user) | The Minio Root User | `string` | n/a | yes |
 | <a name="input_portal_hostname"></a> [portal\_hostname](#input\_portal\_hostname) | The URL for accessing the DEMIS Notification Portal over Telematikinfrastruktur (TI) | `string` | `"portal"` | no |
@@ -118,8 +128,11 @@ Module responsible for deploying the DEMIS Services Helm Charts in a Kubernetes 
 | <a name="input_postgres_server_key"></a> [postgres\_server\_key](#input\_postgres\_server\_key) | The Server Key for the Postgres Database in PEM format, encoded in base64 | `string` | n/a | yes |
 | <a name="input_production_mode"></a> [production\_mode](#input\_production\_mode) | Enables the frontend production mode | `bool` | n/a | yes |
 | <a name="input_profile_provisioning_mode_vs_ars"></a> [profile\_provisioning\_mode\_vs\_ars](#input\_profile\_provisioning\_mode\_vs\_ars) | Provisioning mode for the FHIR Profiles services. Allowed values are: dedicated, distributed, combined | `string` | n/a | yes |
+| <a name="input_profile_provisioning_mode_vs_bedoccupancy"></a> [profile\_provisioning\_mode\_vs\_bedoccupancy](#input\_profile\_provisioning\_mode\_vs\_bedoccupancy) | Provisioning mode for the FHIR Profiles services. Allowed values are: dedicated, distributed, combined | `string` | n/a | yes |
 | <a name="input_profile_provisioning_mode_vs_core"></a> [profile\_provisioning\_mode\_vs\_core](#input\_profile\_provisioning\_mode\_vs\_core) | Provisioning mode for the FHIR Profiles services. Allowed values are: dedicated, distributed, combined | `string` | n/a | yes |
+| <a name="input_profile_provisioning_mode_vs_disease"></a> [profile\_provisioning\_mode\_vs\_disease](#input\_profile\_provisioning\_mode\_vs\_disease) | Provisioning mode for the FHIR Profiles services. Allowed values are: dedicated, distributed, combined | `string` | n/a | yes |
 | <a name="input_profile_provisioning_mode_vs_igs"></a> [profile\_provisioning\_mode\_vs\_igs](#input\_profile\_provisioning\_mode\_vs\_igs) | Provisioning mode for the FHIR Profiles services. Allowed values are: dedicated, distributed, combined | `string` | n/a | yes |
+| <a name="input_profile_provisioning_mode_vs_pathogen"></a> [profile\_provisioning\_mode\_vs\_pathogen](#input\_profile\_provisioning\_mode\_vs\_pathogen) | Provisioning mode for the FHIR Profiles services. Allowed values are: dedicated, distributed, combined | `string` | n/a | yes |
 | <a name="input_project_feature_flags"></a> [project\_feature\_flags](#input\_project\_feature\_flags) | Map of feature flags to enable or disable specific features in the DEMIS deployment. The keys are the names of the feature flags, and the values are booleans indicating whether the feature is enabled (true) or disabled (false). | `map(bool)` | `{}` | no |
 | <a name="input_pull_secrets"></a> [pull\_secrets](#input\_pull\_secrets) | The list of pull secrets to be used for downloading Docker Images | `list(string)` | `[]` | no |
 | <a name="input_pvc_trigger"></a> [pvc\_trigger](#input\_pvc\_trigger) | List of PVC names from module.persistent\_volume\_claims that establishes deploy ordering without known-after-apply propagation. | `list(string)` | `[]` | no |
@@ -144,14 +157,17 @@ Module responsible for deploying the DEMIS Services Helm Charts in a Kubernetes 
 | Name | Description |
 | ---- | ----------- |
 | <a name="output_ars_profile_snapshots"></a> [ars\_profile\_snapshots](#output\_ars\_profile\_snapshots) | Version of the ARS Profile Snapshots being used |
+| <a name="output_disease_package_versions"></a> [disease\_package\_versions](#output\_disease\_package\_versions) | Version of the disease package being used |
 | <a name="output_dlp_enabled"></a> [dlp\_enabled](#output\_dlp\_enabled) | Whether destination-lookup-purger is enabled |
 | <a name="output_dlp_version"></a> [dlp\_version](#output\_dlp\_version) | The version of destination-lookup-purger |
 | <a name="output_fhir_profile_snapshots"></a> [fhir\_profile\_snapshots](#output\_fhir\_profile\_snapshots) | Version of the FHIR Profile Snapshots being used |
 | <a name="output_fsp_enabled"></a> [fsp\_enabled](#output\_fsp\_enabled) | Whether FHIR-Storage-Purger is enabled |
 | <a name="output_fsp_version"></a> [fsp\_version](#output\_fsp\_version) | The version of FHIR-Storage-Purger |
 | <a name="output_igs_profile_snapshots"></a> [igs\_profile\_snapshots](#output\_igs\_profile\_snapshots) | Version of the IGS Profile Snapshots being used |
+| <a name="output_laboratory_package_versions"></a> [laboratory\_package\_versions](#output\_laboratory\_package\_versions) | Version of the statistic package being used |
 | <a name="output_spp_ars_enabled"></a> [spp\_ars\_enabled](#output\_spp\_ars\_enabled) | Whether Surveillance-Pseudonym-Purger-ARS is enabled |
 | <a name="output_spp_ars_version"></a> [spp\_ars\_version](#output\_spp\_ars\_version) | The version of Surveillance-Pseudonym-Purger-ARS |
+| <a name="output_statistic_package_versions"></a> [statistic\_package\_versions](#output\_statistic\_package\_versions) | Version of the statistic package being used |
 | <a name="output_version_istio_routing_chart"></a> [version\_istio\_routing\_chart](#output\_version\_istio\_routing\_chart) | Version of the Istio Routing Chart being used |
 | <a name="output_version_routing_data"></a> [version\_routing\_data](#output\_version\_routing\_data) | Version of the Routing Data |
 <!-- END_TF_DOCS -->

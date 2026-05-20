@@ -14,6 +14,29 @@ appServicePortName: http
 # The "route" part is generated using the destination subset information
 
 virtualServiceHttpRules:
+%{ if fhir_core_split_enabled == true ~}
+%{ for entry in [{package = "disease", service = "disease"}, {package = "laboratory", service = "pathogen"}, {package = "statistic", service = "bedoccupancy"}, {package = "igs", service = "igs"}, {package = "ars", service = "ars"}] ~}
+  - match:
+    - headers:
+        x-fhir-profile:
+          exact: ${entry.package}
+      uri:
+        prefix: /
+    - headers:
+        x-fhir-package:
+          exact: ${entry.package}
+      uri:
+        prefix: /
+    rewrite:
+      uri: /
+    delegate:
+      name: validation-service-${entry.service}-internal
+      namespace: ${namespace}
+%{ if http_timeout_retry_block[entry.service] != null ~}
+    ${indent(4, http_timeout_retry_block[entry.service])}
+%{ endif ~}
+%{ endfor ~}
+%{ else ~}
 %{ for profile in [ "", "igs", "ars"] ~}
   - match:
     - headers:
@@ -26,6 +49,13 @@ virtualServiceHttpRules:
           exact: ${coalesce(profile,"fhir")}-profile-snapshots
       uri:
         prefix: /
+%{ if profile != "" ~}
+    - headers:
+        x-fhir-package:
+          exact: ${profile}
+      uri:
+        prefix: /
+%{ endif ~}
     rewrite:
       uri: /
     delegate:
@@ -45,4 +75,5 @@ virtualServiceHttpRules:
       namespace: ${namespace}
 %{ if http_timeout_retry_block["core"] != null ~}
     ${indent(4, http_timeout_retry_block["core"])}
+%{ endif ~}
 %{ endif ~}

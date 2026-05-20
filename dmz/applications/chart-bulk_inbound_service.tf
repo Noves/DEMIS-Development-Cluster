@@ -74,5 +74,6 @@ module "bulk_inbound_service" {
     demis_hostnames            = local.demis_hostnames,
     http_timeout_retry_block   = try(module.http_timeouts_retries.service_timeout_retry_definitions[local.bulk_inbound_name], null)
     istio_rules_block_external = try(var.external_routing_configurations.rules[local.bulk_inbound_name], [])
+    fhir_core_split_enabled    = local.fhir_core_split_enabled
   })
 }

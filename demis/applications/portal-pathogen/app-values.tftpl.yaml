@@ -24,8 +24,13 @@ customEnvVars:
   
 config:
   production: ${production_mode}
-  pathToFuts: ../../translation/ui-data-model/v${profile_major_version}/fhir
-  featureFlags: 
+  %{~ if fhir_core_split_enabled == true ~}
+  pathToFuts: ../../translation/ui-data-model/laboratory/v${package_laboratory_major_version}/fhir
+  %{ else ~}
+  pathToFuts: ../../translation/ui-data-model/v${package_laboratory_major_version}/fhir
+  %{~ endif ~}
+
+  featureFlags:
     # Prevents empty values that can delete the default environment variables
     "TERRAFORM_DEPLOYMENT": true
     %{~ for flag_name, flag_value in feature_flags ~}
@@ -34,6 +39,10 @@ config:
     %{~ for config_name, config_value in config_options ~}
     "${config_name}" : ${config_value}
     %{~ endfor ~}
+
+  ngxLoggerConfig:
+    level: 1
+    disableConsoleLogging: ${mf_logging_disabled}
 
 %{~ if feature_flag_new_istio_sidecar_requests_and_limits && istio_proxy_resources != null ~}
 podAnnotations:

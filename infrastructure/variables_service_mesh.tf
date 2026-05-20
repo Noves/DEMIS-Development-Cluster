@@ -21,13 +21,6 @@ variable "service_mesh_istio_version" {
   }
 }
 
-variable "service_mesh_enable_native_sidecar_injection" {
-  description = "Enable native sidecar injection for Istio (supported in Kubernetes 1.33.0+ and Istio 1.27.0+)"
-  type        = bool
-  nullable    = true
-  default     = null
-}
-
 variable "service_mesh_kiali_version" {
   type        = string
   description = "The version of the Kiali to be installed."

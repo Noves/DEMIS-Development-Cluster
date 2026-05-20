@@ -34,9 +34,8 @@ module "service_mesh" {
   namespace        = module.istio_namespace.name
   local_deployment = var.local_cluster
   # Configure Istio
-  istio_version                   = var.service_mesh_istio_version
-  istio_replica_count             = var.local_cluster ? var.kind_worker_nodes : var.service_mesh_istiod_replica_count
-  enable_native_sidecar_injection = var.service_mesh_enable_native_sidecar_injection
+  istio_version       = var.service_mesh_istio_version
+  istio_replica_count = var.local_cluster ? var.kind_worker_nodes : var.service_mesh_istiod_replica_count
   # Configure Monitoring
   grafana_enabled    = var.service_mesh_monitoring_enabled
   grafana_version    = var.service_mesh_grafana_version

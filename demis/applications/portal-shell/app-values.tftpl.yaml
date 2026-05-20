@@ -48,6 +48,10 @@ config:
     %{~ for config_name, config_value in config_options ~}
     "${config_name}" : ${config_value}
     %{~ endfor ~}
+
+  ngxLoggerConfig:
+    level: 1
+    disableConsoleLogging: ${mf_logging_disabled}
     
 %{~ if feature_flag_new_istio_sidecar_requests_and_limits && istio_proxy_resources != null ~}
 podAnnotations:

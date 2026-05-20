@@ -43,9 +43,14 @@ virtualServiceExternalHttpRules:
           x-fhir-api-submission-type: disease
           x-fhir-api-version: v${version}
           x-api-version: v${version}
-          x-fhir-profile: fhir-profile-snapshots
           x-fhir-package-version: v${version}
+%{ if fhir_core_split_enabled == true ~}
+          x-fhir-profile: disease
+          x-fhir-package: disease
+%{ else ~}
+          x-fhir-profile: fhir-profile-snapshots
           x-fhir-package: fhir-profile-snapshots
+%{ endif ~}
     match:
     - uri:
         prefix: ${context_path}/notifications/disease/v${version}/fhir/
@@ -59,9 +64,14 @@ virtualServiceExternalHttpRules:
           x-fhir-api-submission-type: pathogen
           x-fhir-api-version: v${version}
           x-api-version: v${version}
-          x-fhir-profile: fhir-profile-snapshots
           x-fhir-package-version: v${version}
+%{ if fhir_core_split_enabled == true ~}
+          x-fhir-profile: laboratory
+          x-fhir-package: laboratory
+%{ else ~}
+          x-fhir-profile: fhir-profile-snapshots
           x-fhir-package: fhir-profile-snapshots
+%{ endif ~}
     match:
     - uri:
         prefix: ${context_path}/notifications/pathogen/v${version}/fhir/
