@@ -61,25 +61,59 @@ variable "ars_secure_queue_encryption_current_secret" {
   default     = ""
 }
 
-variable "rabbitmq_username" {
-  description = "The RabbitMQ username for the application"
+variable "rabbitmq_admin_username" {
+  description = "The RabbitMQ admin username (user: rabbitmq-admin)"
   type        = string
 }
 
-variable "rabbitmq_password" {
-  description = "The RabbitMQ password for the application"
+variable "rabbitmq_admin_password" {
+  description = "The RabbitMQ admin password"
   type        = string
   sensitive   = true
 }
 
-variable "rabbitmq_password_hash" {
-  description = "The RabbitMQ password hash for the application"
+variable "rabbitmq_admin_password_hash" {
+  description = "The RabbitMQ admin password hash for definitions.json"
   type        = string
   sensitive   = true
 }
 
 variable "rabbitmq_erlang_cookie" {
   description = "The RabbitMQ Erlang cookie for the application"
+  type        = string
+  sensitive   = true
+}
+
+####################################
+# Per-Service RabbitMQ Credentials
+####################################
+
+variable "rabbitmq_bis_password" {
+  description = "The RabbitMQ password for the Bulk Inbound Service (user: bulk-inbound-service)"
+  type        = string
+  sensitive   = true
+}
+
+variable "rabbitmq_bis_password_hash" {
+  description = "The RabbitMQ password hash for the Bulk Inbound Service"
+  type        = string
+  sensitive   = true
+}
+
+variable "rabbitmq_smg_password" {
+  description = "The RabbitMQ password for the Secure Message Gateway (user: svc-secure-message-gateway)"
+  type        = string
+  sensitive   = true
+}
+
+variable "rabbitmq_smg_password_hash" {
+  description = "The RabbitMQ password hash for the Secure Message Gateway"
+  type        = string
+  sensitive   = true
+}
+
+variable "rabbitmq_ars_password_hash" {
+  description = "The RabbitMQ password hash for the ARS Service"
   type        = string
   sensitive   = true
 }

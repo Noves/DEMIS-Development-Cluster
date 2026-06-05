@@ -62,8 +62,7 @@ module "demis_services" {
   database_credentials                        = var.database_credentials
   service_accounts                            = var.service_accounts
   ars_pseudo_hash_pepper                      = var.ars_pseudo_hash_pepper
-  rabbitmq_username                           = var.rabbitmq_username
-  rabbitmq_password                           = var.rabbitmq_password
+  rabbitmq_ars_password                       = var.rabbitmq_ars_password
   ars_secure_queue_encryption_current_secret  = var.ars_secure_queue_encryption_current_secret
   ars_secure_queue_encryption_previous_secret = var.ars_secure_queue_encryption_previous_secret
 }

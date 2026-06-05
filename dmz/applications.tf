@@ -41,8 +41,13 @@ module "dmz_services" {
   ars_bis_in_queue_encryption_current_secret  = var.ars_bis_in_queue_encryption_current_secret
   ars_bis_in_queue_encryption_previous_secret = var.ars_bis_in_queue_encryption_previous_secret
   ars_secure_queue_encryption_current_secret  = var.ars_secure_queue_encryption_current_secret
-  rabbitmq_username                           = var.rabbitmq_username
-  rabbitmq_password                           = var.rabbitmq_password
-  rabbitmq_password_hash                      = var.rabbitmq_password_hash
+  rabbitmq_admin_username                     = var.rabbitmq_admin_username
+  rabbitmq_admin_password                     = var.rabbitmq_admin_password
+  rabbitmq_admin_password_hash                = var.rabbitmq_admin_password_hash
   rabbitmq_erlang_cookie                      = var.rabbitmq_erlang_cookie
+  rabbitmq_bis_password                       = var.rabbitmq_bis_password
+  rabbitmq_bis_password_hash                  = var.rabbitmq_bis_password_hash
+  rabbitmq_smg_password                       = var.rabbitmq_smg_password
+  rabbitmq_smg_password_hash                  = var.rabbitmq_smg_password_hash
+  rabbitmq_ars_password_hash                  = var.rabbitmq_ars_password_hash
 }

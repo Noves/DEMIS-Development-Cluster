@@ -21,6 +21,4 @@ locals {
     reset_values                  = var.reset_values
     deployment_timeout            = var.deployment_timeout
   }
-  # The version of the ARE Profile Snapshots to use
-  are_profile_snapshots = var.deployment_information["are-profile-snapshots"].main.version
 }

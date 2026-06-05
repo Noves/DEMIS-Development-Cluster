@@ -1,6 +1,4 @@
 locals {
-  vs_http_rules_file = "http-rules.tftpl.yaml"
-
   #################################
   # Validation Service Delegation #
   #################################
@@ -10,25 +8,11 @@ locals {
   ## Check if stage-override templates are provided, otherwise use the project-defined ones
   vs_template_istio = fileexists("${var.external_chart_path}/${local.vs_name}/${local.istio_values_file}") ? "${var.external_chart_path}/${local.vs_name}/${local.istio_values_file}" : "${path.module}/${local.vs_name}/${local.istio_values_file}"
 
-  ####################################
-  # Validation Service http template #
-  ####################################
-  vs_template_http_rules = fileexists("${var.external_chart_path}/${local.vs_name}/${local.vs_http_rules_file}") ? "${var.external_chart_path}/${local.vs_name}/${local.vs_http_rules_file}" : "${path.module}/${local.vs_name}/${local.vs_http_rules_file}"
-
   ###########################
   # Validation Service ARE  #
   ###########################
-  vs_are_name                     = "${local.vs_name}-are"
-  vs_are_enabled                  = contains(local.service_names, local.vs_are_name) ? var.deployment_information[local.vs_are_name].enabled : false
-  vs_are_template_app             = fileexists("${var.external_chart_path}/${local.vs_are_name}/${local.application_values_file}") ? "${var.external_chart_path}/${local.vs_are_name}/${local.application_values_file}" : "${path.module}/${local.vs_are_name}/${local.application_values_file}"
-  vs_are_template_istio           = fileexists("${var.external_chart_path}/${local.vs_are_name}/${local.istio_values_file}") ? "${var.external_chart_path}/${local.vs_are_name}/${local.istio_values_file}" : "${path.module}/${local.vs_are_name}/${local.istio_values_file}"
-  vs_are_resources_overrides      = try(var.resource_definitions[local.vs_are_name], {})
-  vs_are_replicas                 = lookup(local.vs_are_resources_overrides, "replicas", null) != null ? var.resource_definitions[local.vs_are_name].replicas : null
-  vs_are_resource_block           = lookup(local.vs_are_resources_overrides, "resource_block", null) != null ? var.resource_definitions[local.vs_are_name].resource_block : null
-  vs_are_template_http_rules      = fileexists("${var.external_chart_path}/${local.vs_are_name}/${local.vs_http_rules_file}") ? "${var.external_chart_path}/${local.vs_are_name}/${local.vs_http_rules_file}" : (fileexists("${path.module}/${local.vs_are_name}/${local.vs_http_rules_file}") ? "${path.module}/${local.vs_are_name}/${local.vs_http_rules_file}" : local.vs_template_http_rules)
-  vs_are_http_timeout_retry_block = { are : try(module.http_timeouts_retries.service_timeout_retry_definitions[local.vs_are_name], null) }
-
-  vs_http_timeout_retry_block = merge(local.vs_are_http_timeout_retry_block)
+  vs_are_name    = "${local.vs_name}-are"
+  vs_are_enabled = contains(local.service_names, local.vs_are_name) ? var.deployment_information[local.vs_are_name].enabled : false
 }
 
 # Creates the Virtual Service for the Validation Service delegates
@@ -50,60 +34,49 @@ resource "helm_release" "validation_service" {
   wait_for_jobs       = true
   cleanup_on_fail     = true
   values = [templatefile(local.vs_template_istio, {
-    namespace                = var.target_namespace
-    http_timeout_retry_block = local.vs_http_timeout_retry_block
+    namespace = var.target_namespace
   })]
   timeout = 600
   lifecycle {
     create_before_destroy = true
   }
 
-  depends_on = [module.validation_service_are[0]]
+  depends_on = [module.validation_service_are_apps[0]]
 }
 
-module "validation_service_are_metadata" {
-  source                    = "../../modules/fhir-profiles-metadata"
-  profile_type              = "are-profile-snapshots"
-  deployment_information    = var.deployment_information[local.vs_are_name]
-  default_profile_snapshots = local.are_profile_snapshots
-  provisioning_mode         = var.profile_provisioning_mode_vs_are
+moved {
+  from = module.validation_service_are[0].helm_release.chart
+  to   = module.validation_service_are_apps[0].module.validation_service_legacy[0].helm_release.chart
+}
+moved {
+  from = module.validation_service_are[0].helm_release.istio[0]
+  to   = module.validation_service_are_apps[0].helm_release.istio
 }
 
-locals {
-  vs_core_http_rules = templatefile(local.vs_are_template_http_rules, {
-    subsets = module.validation_service_are_metadata.destination_subsets
-  })
-}
+module "validation_service_are_apps" {
+  # Deploy if enabled
+  count = local.vs_are_enabled ? 1 : 0
 
-module "validation_service_are" {
-  source                 = "../../modules/helm_deployment"
-  count                  = local.vs_are_enabled ? 1 : 0
-  namespace              = var.target_namespace
-  application_name       = local.vs_are_name
-  deployment_information = var.deployment_information[local.vs_are_name]
-  helm_settings          = local.common_helm_release_settings
-  application_values = templatefile(local.vs_are_template_app, {
+  source                      = "../../modules/validation_service_apps"
+  name                        = local.vs_are_name
+  deployment_information      = var.deployment_information[local.vs_are_name]
+  helm_release_settings       = local.common_helm_release_settings
+  target_namespace            = var.target_namespace
+  external_template_directory = var.external_chart_path
+  local_template_directory    = path.module
+  profile_provisioning_mode   = coalesce(var.profile_provisioning_mode_vs_are, "dedicated")
+  feature_flags               = var.feature_flags
+  config_options              = var.config_options
+  resource_definitions        = var.resource_definitions
+  timeout_retries             = module.http_timeouts_retries.service_timeout_retry_definitions
+  package_type                = "are-profile-snapshots"
+  app_template_params = {
     image_pull_secrets                                 = var.pull_secrets,
     repository                                         = var.docker_registry,
     debug_enable                                       = var.debug_enabled,
     istio_enable                                       = var.istio_enabled,
-    profile_version                                    = local.are_profile_snapshots,
     profile_docker_registry                            = var.docker_registry,
-    feature_flags                                      = try(var.feature_flags[local.vs_are_name], {}),
-    config_options                                     = try(var.config_options[local.vs_are_name], {}),
-    replica_count                                      = local.vs_are_replicas,
-    resource_block                                     = local.vs_are_resource_block,
-    profile_versions                                   = module.validation_service_are_metadata.current_profile_versions,
-    provisioning_mode                                  = coalesce(var.profile_provisioning_mode_vs_are, "dedicated"),
     feature_flag_new_istio_sidecar_requests_and_limits = try(var.feature_flags[local.vs_are_name].FEATURE_FLAG_NEW_ISTIO_SIDECAR_REQUEST_AND_LIMITS, false),
-    istio_proxy_resources                              = try(local.vs_are_resources_overrides.istio_proxy_resources, var.istio_proxy_default_resources),
-    namespace                                          = var.target_namespace
-  })
-  istio_values = templatefile(local.vs_are_template_istio, {
-    namespace                         = var.target_namespace,
-    custom_virtual_service_http_rules = local.vs_core_http_rules,
-    custom_destination_subsets        = module.validation_service_are_metadata.destination_subsets,
-    destinationSubsets                = try(yamlencode(module.validation_service_are_metadata.destination_subsets), ""),
-    http_timeout_retry_block          = try(module.http_timeouts_retries.service_timeout_retry_definitions[local.vs_are_name], null)
-  })
+  }
+  istio_template_params = {}
 }

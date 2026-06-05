@@ -6,9 +6,9 @@ locals {
   fts_template_app   = fileexists("${var.external_chart_path}/${local.fts_name}/${local.application_values_file}") ? "${var.external_chart_path}/${local.fts_name}/${local.application_values_file}" : "${path.module}/${local.fts_name}/${local.application_values_file}"
   fts_template_istio = fileexists("${var.external_chart_path}/${local.fts_name}/${local.istio_values_file}") ? "${var.external_chart_path}/${local.fts_name}/${local.istio_values_file}" : "${path.module}/${local.fts_name}/${local.istio_values_file}"
   # FHIR Profile Snapshots
-  fts_ars_profile_snapshots  = local.vs_ars_enabled && length(module.validation_service_ars_metadata[0].current_profile_versions) > 0 ? module.validation_service_ars_metadata[0].current_profile_versions : [local.ars_profile_snapshots]
-  fts_fhir_profile_snapshots = local.vs_core_enabled && length(module.validation_service_core_metadata[0].current_profile_versions) > 0 ? module.validation_service_core_metadata[0].current_profile_versions : [local.fhir_profile_snapshots]
-  fts_igs_profile_snapshots  = local.vs_igs_enabled && length(module.validation_service_igs_metadata[0].current_profile_versions) > 0 ? module.validation_service_igs_metadata[0].current_profile_versions : [local.igs_profile_snapshots]
+  fts_ars_profile_snapshots  = local.vs_ars_enabled ? module.validation_service_ars_apps[0].profile_metadata.current_profile_versions : []
+  fts_fhir_profile_snapshots = local.vs_core_enabled ? module.validation_service_core_apps[0].profile_metadata.current_profile_versions : []
+  fts_igs_profile_snapshots  = local.vs_igs_enabled ? module.validation_service_igs_apps[0].profile_metadata.current_profile_versions : []
 }
 
 module "terminology_server" {

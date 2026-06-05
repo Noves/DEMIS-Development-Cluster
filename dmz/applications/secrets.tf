@@ -123,14 +123,14 @@ resource "kubernetes_secret_v1" "ars_smg_secure_queue_encryption_secret" {
 # Secrets
 #####################
 
-resource "kubernetes_secret_v1" "rabbit_mq_credentials" {
+resource "kubernetes_secret_v1" "rabbitmq_admin_credentials" {
   metadata {
-    name      = "rabbit-mq-credentials"
+    name      = "rabbitmq-admin-credentials"
     namespace = var.target_namespace
     annotations = {
       checksum = substr(sha256(jsonencode({
-        RABBITMQ_USERNAME = var.rabbitmq_username
-        RABBITMQ_PASSWORD = var.rabbitmq_password
+        RABBITMQ_ADMIN_USERNAME = var.rabbitmq_admin_username
+        RABBITMQ_ADMIN_PASSWORD = var.rabbitmq_admin_password
       })), 0, 61)
     }
   }
@@ -138,8 +138,53 @@ resource "kubernetes_secret_v1" "rabbit_mq_credentials" {
   immutable = true
 
   data = {
-    RABBITMQ_USERNAME      = var.rabbitmq_username
-    RABBITMQ_PASSWORD      = var.rabbitmq_password
-    RABBITMQ_ERLANG_COOKIE = var.rabbitmq_erlang_cookie
+    RABBITMQ_ADMIN_USERNAME = var.rabbitmq_admin_username
+    RABBITMQ_ADMIN_PASSWORD = var.rabbitmq_admin_password
+    RABBITMQ_ERLANG_COOKIE  = var.rabbitmq_erlang_cookie
   }
 }
+
+resource "kubernetes_secret_v1" "bis_rabbitmq_credentials" {
+  metadata {
+    name      = "bis-rabbitmq-credentials"
+    namespace = var.target_namespace
+    annotations = {
+      checksum = substr(sha256(jsonencode({
+        SPRING_RABBITMQ_USERNAME     = "svc-bulk-inbound-service"
+        SPRING_RABBITMQ_PASSWORD     = var.rabbitmq_bis_password
+        SPRING_RABBITMQ_VIRTUAL_HOST = "bulk"
+      })), 0, 61)
+    }
+  }
+
+  immutable = true
+
+  data = {
+    SPRING_RABBITMQ_USERNAME     = "svc-bulk-inbound-service"
+    SPRING_RABBITMQ_PASSWORD     = var.rabbitmq_bis_password
+    SPRING_RABBITMQ_VIRTUAL_HOST = "bulk"
+  }
+}
+
+resource "kubernetes_secret_v1" "smg_rabbitmq_credentials" {
+  metadata {
+    name      = "smg-rabbitmq-credentials"
+    namespace = var.target_namespace
+    annotations = {
+      checksum = substr(sha256(jsonencode({
+        SPRING_RABBITMQ_USERNAME     = "svc-secure-message-gateway"
+        SPRING_RABBITMQ_PASSWORD     = var.rabbitmq_smg_password
+        SPRING_RABBITMQ_VIRTUAL_HOST = "bulk"
+      })), 0, 61)
+    }
+  }
+
+  immutable = true
+
+  data = {
+    SPRING_RABBITMQ_USERNAME     = "svc-secure-message-gateway"
+    SPRING_RABBITMQ_PASSWORD     = var.rabbitmq_smg_password
+    SPRING_RABBITMQ_VIRTUAL_HOST = "bulk"
+  }
+}
+

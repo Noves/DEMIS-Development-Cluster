@@ -90,13 +90,9 @@ variable "ars_pseudo_hash_pepper" {
 # DEMIS RabbitMQ Credentials
 ############################
 
-variable "rabbitmq_username" {
-  description = "The RabbitMQ username for the application"
-  type        = string
-}
 
-variable "rabbitmq_password" {
-  description = "The RabbitMQ password for the application"
+variable "rabbitmq_ars_password" {
+  description = "The RabbitMQ password for the ARS Service (user: svc-ars-service)"
   type        = string
   sensitive   = true
 }

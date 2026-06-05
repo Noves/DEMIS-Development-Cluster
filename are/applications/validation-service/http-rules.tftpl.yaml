@@ -13,6 +13,9 @@
           number: {{ .Values.appServicePortExternal }}
       weight: ${s.weight}
 %{ endfor ~}
+%{ if http_timeout_retry_block["v${version}"] != null ~}
+  ${indent(2, http_timeout_retry_block["v${version}"])}
+%{ endif ~}
 %{ endfor ~}
 %{ endfor ~}
 %{ if length([for sub in concat(tolist(subsets.main), tolist(subsets.canary)): sub if (sub.mode == "dedicated")]) >= 1 || (length(distinct(compact([for subset in tolist(subsets.main): subset.labels.fhirProfileVersion if ((subset.mode == "distributed") && can(length(subset.labels.fhirProfileVersion)))]))) <= 1 && length(distinct(compact([for subset in tolist(subsets.canary): subset.labels.fhirProfileVersion if ((subset.mode == "distributed") && can(length(subset.labels.fhirProfileVersion)))]))) <= 1) ~}
@@ -45,4 +48,7 @@
           number: {{ .Values.appServicePortExternal }}
       weight: ${s.weight}
 %{ endfor ~}
+%{ if http_timeout_retry_block["default"] != null ~}
+  ${indent(2, http_timeout_retry_block["default"])}
+%{ endif ~} 
 %{ endif ~}

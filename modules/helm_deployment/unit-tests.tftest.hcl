@@ -1,3 +1,7 @@
+# Mock the Helm provider so no charts are fetched from remote repositories.
+# This keeps plan-time assertions fast and fully offline.
+mock_provider "helm" {}
+
 # Test Canary Deployment of two versions of the same application, no istio
 run "helm_deployment_canary_with_istio_test" {
   command = plan

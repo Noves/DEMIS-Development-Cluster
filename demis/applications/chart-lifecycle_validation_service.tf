@@ -17,7 +17,7 @@ module "lifecycle_validation_service" {
   application_name       = local.lcvs_name
   deployment_information = var.deployment_information[local.lcvs_name]
   helm_settings          = local.common_helm_release_settings
-
+  depends_on             = [helm_release.futs[0]]
   # Pass the values for the chart
   application_values = templatefile(local.lcvs_template_app, {
     image_pull_secrets                                 = var.pull_secrets,

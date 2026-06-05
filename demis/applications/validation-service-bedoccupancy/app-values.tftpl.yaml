@@ -1,7 +1,7 @@
 # Values for the validation-service-bedoccupancy Helm Template
 
-fullname: "validation-service-bedoccupancy"
-fullnameOverride: "validation-service-bedoccupancy"
+fullname: "${app_name}"
+fullnameOverride: "${app_name}"
 nameOverride: "validation-service-bedoccupancy"
 
 # Enables debug mode
@@ -18,9 +18,17 @@ required:
   profiles:
     repository: ${profile_docker_registry}
     packageName: rki.demis.statistic.snapshots
-    version: ${profile_version}
+    version: ""
 %{ if length(profile_versions) > 0 ~}
     versions: 
+%{ for version in profile_versions ~}
+      - ${version}
+%{ endfor ~}
+%{ endif ~}
+  packages:
+    packageName: rki.demis.statistic.snapshots
+%{ if length(profile_versions) > 0 ~}
+    versions:
 %{ for version in profile_versions ~}
       - ${version}
 %{ endfor ~}
@@ -67,3 +75,5 @@ ${resource_block}
 # - distributed: one profile provisioning for one pod
 # - combined: mix of dedicated and distributed
 provisioningMode: ${provisioning_mode}
+
+useTopologySpreadConstraints: true

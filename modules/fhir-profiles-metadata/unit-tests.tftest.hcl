@@ -11,9 +11,8 @@ run "check_profile_versions_main_empty_canary" {
       }
       canary = {}
     }
-    profile_type              = "fhir-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "dedicated"
+    profile_type      = "fhir-profile-snapshots"
+    provisioning_mode = "dedicated"
   }
 
   # assert that the canary profile versions are same like main profile versions
@@ -69,9 +68,8 @@ run "check_profile_versions_main_and_canary" {
         weight  = 100
       }
     }
-    profile_type              = "fhir-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "dedicated"
+    profile_type      = "fhir-profile-snapshots"
+    provisioning_mode = "dedicated"
   }
 
   # assert that the canary profile versions are same like main profile versions
@@ -129,9 +127,8 @@ run "check_profile_versions_main_and_canary_different_versions" {
         profiles = ["6.0.8", "5.3.5"]
       }
     }
-    profile_type              = "fhir-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "dedicated"
+    profile_type      = "fhir-profile-snapshots"
+    provisioning_mode = "dedicated"
   }
 
   # assert that the canary profile versions are same like main profile versions
@@ -186,9 +183,8 @@ run "check_support_fhir_profile_snapshots_main" {
       }
       canary = {}
     }
-    profile_type              = "fhir-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "dedicated"
+    profile_type      = "fhir-profile-snapshots"
+    provisioning_mode = "dedicated"
   }
 
   # assert that fhire-profile-snapshots is supported
@@ -214,9 +210,8 @@ run "check_support_fhir_profile_snapshots_canary" {
         weight  = 0
       }
     }
-    profile_type              = "fhir-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "dedicated"
+    profile_type      = "fhir-profile-snapshots"
+    provisioning_mode = "dedicated"
   }
 
   # assert that fhire-profile-snapshots is supported
@@ -239,9 +234,8 @@ run "check_support_igs_profile_snapshots_main" {
       }
       canary = {}
     }
-    profile_type              = "igs-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "dedicated"
+    profile_type      = "igs-profile-snapshots"
+    provisioning_mode = "dedicated"
   }
 
   # assert that igs-profile-snapshots is supported
@@ -267,9 +261,8 @@ run "check_support_igs_profile_snapshots_canary" {
         weight  = 0
       }
     }
-    profile_type              = "igs-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "dedicated"
+    profile_type      = "igs-profile-snapshots"
+    provisioning_mode = "dedicated"
   }
 
   # assert that igs-profile-snapshots is supported
@@ -292,9 +285,8 @@ run "check_support_ars_profile_snapshots_main" {
       }
       canary = {}
     }
-    profile_type              = "ars-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "dedicated"
+    profile_type      = "ars-profile-snapshots"
+    provisioning_mode = "dedicated"
   }
 
   # assert that ars-profile-snapshots is supported
@@ -320,9 +312,8 @@ run "check_support_ars_profile_snapshots_canary" {
         weight  = 0
       }
     }
-    profile_type              = "ars-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "dedicated"
+    profile_type      = "ars-profile-snapshots"
+    provisioning_mode = "dedicated"
   }
 
   # assert that ars-profile-snapshots is supported
@@ -346,9 +337,8 @@ run "check_dedicated_main_deployment" {
       }
       canary = {}
     }
-    profile_type              = "fhir-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "dedicated"
+    profile_type      = "fhir-profile-snapshots"
+    provisioning_mode = "dedicated"
   }
 
   # assert that subsets_main length is correct
@@ -386,9 +376,8 @@ run "check_dedicated_canary_deployment" {
         weight  = 0
       }
     }
-    profile_type              = "fhir-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "dedicated"
+    profile_type      = "fhir-profile-snapshots"
+    provisioning_mode = "dedicated"
   }
 
   # assert that subsets_main length is correct
@@ -429,9 +418,8 @@ run "check_distributed_main_deployment" {
       }
       canary = {}
     }
-    profile_type              = "fhir-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "distributed"
+    profile_type      = "fhir-profile-snapshots"
+    provisioning_mode = "distributed"
   }
 
   # assert that subsets_main length is correct
@@ -469,9 +457,8 @@ run "check_distributed_canary_deployment" {
         weight  = 0
       }
     }
-    profile_type              = "fhir-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "distributed"
+    profile_type      = "fhir-profile-snapshots"
+    provisioning_mode = "distributed"
   }
 
   # assert that subsets_main length is correct
@@ -512,9 +499,8 @@ run "check_combined_main_deployment" {
       }
       canary = {}
     }
-    profile_type              = "fhir-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "combined"
+    profile_type      = "fhir-profile-snapshots"
+    provisioning_mode = "combined"
   }
 
   # assert that subsets_main length is correct
@@ -546,9 +532,8 @@ run "check_combined_canary_deployment" {
         weight  = 0
       }
     }
-    profile_type              = "fhir-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "combined"
+    profile_type      = "fhir-profile-snapshots"
+    provisioning_mode = "combined"
   }
 
   # assert that subsets_main length is correct
@@ -576,170 +561,6 @@ run "check_combined_canary_deployment" {
   }
 }
 
-# Test for combined main deployment profile empty
-run "check_combined_main_deployment_profiles_empty" {
-  command = apply
-
-  variables {
-    deployment_information = {
-      main = {
-        version = "2.7.1"
-        weight  = 100
-      }
-      canary = {}
-    }
-    profile_type              = "fhir-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "combined"
-  }
-
-  # assert that subsets_main length is correct
-  assert {
-    condition     = length(tolist(local.subsets_main)) == 1
-    error_message = "Expected output was 3 but is: ${length(tolist(local.subsets_main))}."
-  }
-
-  # assert that subsets_main labels length is correct
-  assert {
-    condition     = alltrue([for subset in tolist(local.subsets_main) : (length(subset.labels) == 3)])
-    error_message = "Expected output was 3 all but is: ${jsonencode([for subset in tolist(local.subsets_main) : length(subset.labels)])}."
-  }
-}
-
-# Test for combined canary deployment profile empty
-run "check_combined_canary_deployment_profiles_empty" {
-  command = apply
-
-  variables {
-    deployment_information = {
-      main = {
-        version = "2.7.1"
-        weight  = 100
-      }
-      canary = {
-        version = "2.7.2"
-        weight  = 0
-      }
-    }
-    profile_type              = "fhir-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "combined"
-  }
-
-  # assert that subsets_main length is correct
-  assert {
-    condition     = length(tolist(local.subsets_main)) == 1
-    error_message = "Expected output was 3 but is: ${length(tolist(local.subsets_main))}."
-  }
-
-  # assert that subsets_main labels length is correct
-  assert {
-    condition     = alltrue([for subset in tolist(local.subsets_main) : (length(subset.labels) == 3)])
-    error_message = "Expected output was 3 for all but is: ${jsonencode([for subset in tolist(local.subsets_main) : length(subset.labels)])}."
-  }
-
-  # assert that subsets_canary length is correct
-  assert {
-    condition     = length(tolist(local.subsets_canary)) == 1
-    error_message = "Expected output was 3 but is: ${length(tolist(local.subsets_main))}."
-  }
-
-  # assert that subsets_canary labels length is correct
-  assert {
-    condition     = alltrue([for subset in tolist(local.subsets_canary) : (length(subset.labels) == 3)])
-    error_message = "Expected output was 3 for all but is: ${jsonencode([for subset in tolist(local.subsets_main) : length(subset.labels)])}."
-  }
-
-  # assert that canary labels are correct
-  assert {
-    condition     = alltrue([for subset in tolist(local.subsets_canary) : alltrue([for k, v in subset.labels : (k == "version" || k == "fhirProfile" || k == "fhirProfileVersion")])])
-    error_message = "Expected output was version, fhirProfile and fhirProfileVersion but is: ${jsonencode([for subset in tolist(local.subsets_canary) : subset.labels])}."
-  }
-
-  # assert that main labels are correct
-  assert {
-    condition     = alltrue([for subset in tolist(local.subsets_main) : alltrue([for k, v in subset.labels : (k == "version" || k == "fhirProfile" || k == "fhirProfileVersion")])])
-    error_message = "Expected output was version, fhirProfile and fhirProfileVersion but is: ${jsonencode([for subset in tolist(local.subsets_main) : subset.labels])}."
-  }
-}
-
-# Test for combined main deployment profile empty
-run "check_combined_canary_deployment_profiles_filed" {
-  command = apply
-
-  variables {
-    deployment_information = {
-      main = {
-        version = "2.7.1"
-        weight  = 100
-      }
-      canary = {
-        version  = "2.7.2"
-        weight   = 0
-        profiles = ["6.0.8", "5.3.5"]
-      }
-    }
-    profile_type              = "fhir-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "combined"
-  }
-
-  # assert that subsets_main length is correct
-  assert {
-    condition     = length(tolist(local.subsets_main)) == 1
-    error_message = "Expected output was 3 but is: ${length(tolist(local.subsets_main))}."
-  }
-
-  # assert that subsets_main labels length is correct
-  assert {
-    condition     = alltrue([for subset in tolist(local.subsets_main) : (length(subset.labels) == 3)])
-    error_message = "Expected output was 3 for all but is: ${jsonencode([for subset in tolist(local.subsets_main) : length(subset.labels)])}."
-  }
-
-  # assert that subsets_canary length is correct
-  assert {
-    condition     = length(tolist(local.subsets_canary)) == 3
-    error_message = "Expected output was 3 but is: ${length(tolist(local.subsets_main))}."
-  }
-
-  # assert that subsets_canary labels length is correct
-  assert {
-    condition     = alltrue([for subset in tolist(local.subsets_canary) : (length(subset.labels) == 3)])
-    error_message = "Expected output was 3 for all but is: ${jsonencode([for subset in tolist(local.subsets_main) : length(subset.labels)])}."
-  }
-}
-
-# Test for combined main deployment destination_subsets
-run "check_combined_main_deployment_destination_subsets" {
-  command = apply
-
-  variables {
-    deployment_information = {
-      main = {
-        version = "2.7.1"
-        weight  = 100
-      }
-      canary = {}
-    }
-    profile_type              = "fhir-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "combined"
-  }
-
-  # assert that destination_subsets main length is correct
-  assert {
-    condition     = length(tolist(local.destination_subsets.main)) == 1
-    error_message = "Expected output was 1 but is: ${length(tolist(local.destination_subsets.main))}."
-  }
-
-  # assert that destination_subsets canary length is correct
-  assert {
-    condition     = length(tolist(local.destination_subsets.canary)) == 0
-    error_message = "Expected output was 0 but is: ${length(tolist(local.destination_subsets.canary))}."
-  }
-
-}
-
 # Test for combined main deployment destination_subsets
 run "check_combined_canary_deployment_destination_subsets" {
   command = apply
@@ -747,17 +568,18 @@ run "check_combined_canary_deployment_destination_subsets" {
   variables {
     deployment_information = {
       main = {
-        version = "2.7.1"
-        weight  = 100
+        version  = "2.7.1"
+        weight   = 100
+        profiles = ["6.0.0"]
       }
       canary = {
-        version = "2.7.2"
-        weight  = 0
+        version  = "2.7.2"
+        weight   = 0
+        profiles = ["6.0.8"]
       }
     }
-    profile_type              = "fhir-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "combined"
+    profile_type      = "fhir-profile-snapshots"
+    provisioning_mode = "combined"
   }
 
   # assert that destination_subsets main length is correct
@@ -812,9 +634,8 @@ run "check_canary_deployemnt_without_application_update" {
         profiles = ["6.0.8", "5.3.1"]
       }
     }
-    profile_type              = "fhir-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "combined"
+    profile_type      = "fhir-profile-snapshots"
+    provisioning_mode = "combined"
   }
 
   # assert that subsets_canary length is correct
@@ -864,16 +685,16 @@ run "check_canary_deployemnt_without_application_update_empty_profiles" {
   variables {
     deployment_information = {
       main = {
-        version = "2.7.1"
-        weight  = 100
+        version  = "2.7.1"
+        weight   = 100
+        profiles = ["6.0.8"]
       }
       canary = {
         profiles = ["6.0.8", "5.3.1"]
       }
     }
-    profile_type              = "fhir-profile-snapshots"
-    default_profile_snapshots = "5.3.1"
-    provisioning_mode         = "combined"
+    profile_type      = "fhir-profile-snapshots"
+    provisioning_mode = "combined"
   }
 
   # assert that subsets_canary length is correct

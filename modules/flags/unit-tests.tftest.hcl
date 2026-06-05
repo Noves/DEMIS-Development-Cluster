@@ -168,3 +168,239 @@ run "all_services_config_validation_test" {
   expect_failures = [var.all_services]
 }
 
+# ---------------------------------------------------------------------------
+# Compound-key tests
+# ---------------------------------------------------------------------------
+
+# Compound key "service1:env1" creates its own output entry and does NOT
+# require an entry in all_services.
+run "feature_flags_compound_key_test" {
+  command = plan
+
+  variables {
+    all_services = ["service1"]
+    feature_flags = [
+      {
+        services   = ["service1:env1"],
+        flag_name  = "FEATURE_FLAG_COMPOUND",
+        flag_value = true
+      },
+      {
+        services   = ["service1"],
+        flag_name  = "FEATURE_FLAG_PLAIN",
+        flag_value = false
+      }
+    ]
+  }
+
+  # compound key becomes its own top-level key
+  assert {
+    condition     = contains(keys(output.service_feature_flags), "service1:env1")
+    error_message = "Expected compound key 'service1:env1' to be present in service_feature_flags, got: ${jsonencode(keys(output.service_feature_flags))}"
+  }
+
+  # plain service key still exists
+  assert {
+    condition     = contains(keys(output.service_feature_flags), "service1")
+    error_message = "Expected plain key 'service1' to be present in service_feature_flags, got: ${jsonencode(keys(output.service_feature_flags))}"
+  }
+
+  # compound key only carries the flag targeted at it
+  assert {
+    condition     = output.service_feature_flags["service1:env1"] == { "FEATURE_FLAG_COMPOUND" = true }
+    error_message = "Expected service1:env1 to only carry FEATURE_FLAG_COMPOUND, got: ${jsonencode(output.service_feature_flags["service1:env1"])}"
+  }
+
+  # plain key only carries the flag targeted at it (not the compound one)
+  assert {
+    condition     = output.service_feature_flags["service1"] == { "FEATURE_FLAG_PLAIN" = false }
+    error_message = "Expected service1 to only carry FEATURE_FLAG_PLAIN, got: ${jsonencode(output.service_feature_flags["service1"])}"
+  }
+}
+
+# "all" broadcasts to both plain and compound keys
+run "feature_flags_all_broadcasts_to_compound_key_test" {
+  command = plan
+
+  variables {
+    all_services = ["service1"]
+    feature_flags = [
+      {
+        services   = ["service1:env1"],
+        flag_name  = "FEATURE_FLAG_COMPOUND",
+        flag_value = true
+      },
+      {
+        services   = ["all"],
+        flag_name  = "FEATURE_FLAG_GLOBAL",
+        flag_value = true
+      }
+    ]
+  }
+
+  # FEATURE_FLAG_GLOBAL must appear under compound key
+  assert {
+    condition     = lookup(output.service_feature_flags["service1:env1"], "FEATURE_FLAG_GLOBAL", null) == true
+    error_message = "Expected 'all' flag to broadcast to compound key 'service1:env1', got: ${jsonencode(output.service_feature_flags["service1:env1"])}"
+  }
+
+  # FEATURE_FLAG_GLOBAL must also appear under plain key
+  assert {
+    condition     = lookup(output.service_feature_flags["service1"], "FEATURE_FLAG_GLOBAL", null) == true
+    error_message = "Expected 'all' flag to broadcast to plain key 'service1', got: ${jsonencode(output.service_feature_flags["service1"])}"
+  }
+}
+
+# Compound key in config_options works the same way
+run "config_options_compound_key_test" {
+  command = plan
+
+  variables {
+    all_services = ["service1"]
+    config_options = [
+      {
+        services     = ["service1:env1"],
+        option_name  = "CONFIG_COMPOUND",
+        option_value = "compound_value"
+      },
+      {
+        services     = ["service1"],
+        option_name  = "CONFIG_PLAIN",
+        option_value = "plain_value"
+      }
+    ]
+  }
+
+  assert {
+    condition     = contains(keys(output.service_config_options), "service1:env1")
+    error_message = "Expected compound key 'service1:env1' in service_config_options, got: ${jsonencode(keys(output.service_config_options))}"
+  }
+
+  assert {
+    condition     = output.service_config_options["service1:env1"] == { "CONFIG_COMPOUND" = "compound_value" }
+    error_message = "Expected service1:env1 to only carry CONFIG_COMPOUND, got: ${jsonencode(output.service_config_options["service1:env1"])}"
+  }
+
+  assert {
+    condition     = output.service_config_options["service1"] == { "CONFIG_PLAIN" = "plain_value" }
+    error_message = "Expected service1 to only carry CONFIG_PLAIN, got: ${jsonencode(output.service_config_options["service1"])}"
+  }
+}
+
+# Compound keys don't need to be in all_services — this must NOT fail
+run "compound_key_not_required_in_all_services_ff_test" {
+  command = plan
+
+  variables {
+    all_services = ["service1"]
+    feature_flags = [
+      {
+        services   = ["service1", "service1:env1", "service1:env2"],
+        flag_name  = "FEATURE_FLAG_MULTI",
+        flag_value = true
+      }
+    ]
+  }
+
+  assert {
+    condition     = length(keys(output.service_feature_flags)) == 3
+    error_message = "Expected 3 keys (service1, service1:env1, service1:env2), got: ${jsonencode(keys(output.service_feature_flags))}"
+  }
+}
+
+# Compound keys don't need to be in all_services — same for config_options
+run "compound_key_not_required_in_all_services_config_test" {
+  command = plan
+
+  variables {
+    all_services = ["service1"]
+    config_options = [
+      {
+        services     = ["service1", "service1:env1"],
+        option_name  = "CONFIG_MULTI",
+        option_value = "value"
+      }
+    ]
+  }
+
+  assert {
+    condition     = length(keys(output.service_config_options)) == 2
+    error_message = "Expected 2 keys (service1, service1:env1), got: ${jsonencode(keys(output.service_config_options))}"
+  }
+}
+
+# ---------------------------------------------------------------------------
+# Validation edge-case tests for compound key rules
+# ---------------------------------------------------------------------------
+
+# "all:" prefix must be rejected in feature_flags
+run "feature_flags_all_compound_key_rejected_test" {
+  command = plan
+
+  variables {
+    all_services = ["service1"]
+    feature_flags = [
+      {
+        services   = ["all:service1"],
+        flag_name  = "FEATURE_FLAG_TEST",
+        flag_value = true
+      }
+    ]
+  }
+
+  expect_failures = [var.feature_flags]
+}
+
+# "all:" prefix must be rejected in config_options
+run "config_options_all_compound_key_rejected_test" {
+  command = plan
+
+  variables {
+    all_services = ["service1"]
+    config_options = [
+      {
+        services     = ["all:service1"],
+        option_name  = "CONFIG_TEST",
+        option_value = "value"
+      }
+    ]
+  }
+
+  expect_failures = [var.config_options]
+}
+
+# Trailing colon must be rejected in feature_flags
+run "feature_flags_trailing_colon_rejected_test" {
+  command = plan
+
+  variables {
+    all_services = ["service1"]
+    feature_flags = [
+      {
+        services   = ["service1:"],
+        flag_name  = "FEATURE_FLAG_TEST",
+        flag_value = true
+      }
+    ]
+  }
+
+  expect_failures = [var.feature_flags]
+}
+
+# Trailing colon must be rejected in config_options
+run "config_options_trailing_colon_rejected_test" {
+  command = plan
+
+  variables {
+    all_services = ["service1"]
+    config_options = [
+      {
+        services     = ["service1:"],
+        option_name  = "CONFIG_TEST",
+        option_value = "value"
+      }
+    ]
+  }
+
+  expect_failures = [var.config_options]
+}

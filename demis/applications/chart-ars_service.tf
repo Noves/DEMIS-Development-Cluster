@@ -61,6 +61,7 @@ module "ars_service" {
     ars_bulk_stats_user_db_secret_checksum             = try(kubernetes_secret_v1.database_credentials[local.ars_bulk_stats_user_index].metadata[0].annotations["checksum"], ""),
     ars_bulk_stats_purger_db_secret_checksum           = try(kubernetes_secret_v1.database_credentials[local.ars_bulk_stats_purger_index].metadata[0].annotations["checksum"], ""),
     ars_bulk_secure_queue_encryption_secret_checksum   = try(kubernetes_secret_v1.ars_secure_queue_encryption_secret.metadata[0].annotations["checksum"], ""),
+    ars_rabbitmq_credentials_checksum                  = try(kubernetes_secret_v1.ars_rabbitmq_credentials.metadata[0].annotations["checksum"], ""),
     feature_flag_new_istio_sidecar_requests_and_limits = try(var.feature_flags[local.ars_name].FEATURE_FLAG_NEW_ISTIO_SIDECAR_REQUEST_AND_LIMITS, false),
     istio_proxy_resources                              = var.resource_definitions[local.ars_name].istio_proxy_resources,
   })
@@ -70,7 +71,7 @@ module "ars_service" {
     cluster_gateway            = var.cluster_gateway,
     demis_hostnames            = local.demis_hostnames
     support_fhir_api_versions  = var.profile_provisioning_mode_vs_ars != null && var.profile_provisioning_mode_vs_ars != "dedicated"
-    fhir_api_versions          = module.validation_service_ars_metadata[0].current_profile_versions,
+    fhir_api_versions          = module.validation_service_ars_apps[0].profile_metadata.current_profile_versions,
     http_timeout_retry_block   = try(module.http_timeouts_retries.service_timeout_retry_definitions[local.ars_name], null)
     istio_rules_block_external = try(var.external_routing_configurations.rules[local.ars_name], [])
     fhir_core_split_enabled    = local.fhir_core_split_enabled

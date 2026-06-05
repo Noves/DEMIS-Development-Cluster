@@ -56,18 +56,12 @@ Module responsible for deploying the DEMIS Services Helm Charts in a Kubernetes 
 | <a name="module_surveillance_pseudonym_purger_ars"></a> [surveillance\_pseudonym\_purger\_ars](#module\_surveillance\_pseudonym\_purger\_ars) | ../../modules/helm_deployment | n/a |
 | <a name="module_surveillance_pseudonym_service_ars"></a> [surveillance\_pseudonym\_service\_ars](#module\_surveillance\_pseudonym\_service\_ars) | ../../modules/helm_deployment | n/a |
 | <a name="module_terminology_server"></a> [terminology\_server](#module\_terminology\_server) | ../../modules/helm_deployment | n/a |
-| <a name="module_validation_service_ars"></a> [validation\_service\_ars](#module\_validation\_service\_ars) | ../../modules/helm_deployment | n/a |
-| <a name="module_validation_service_ars_metadata"></a> [validation\_service\_ars\_metadata](#module\_validation\_service\_ars\_metadata) | ../../modules/fhir-profiles-metadata | n/a |
-| <a name="module_validation_service_bedoccupancy"></a> [validation\_service\_bedoccupancy](#module\_validation\_service\_bedoccupancy) | ../../modules/helm_deployment | n/a |
-| <a name="module_validation_service_bedoccupancy_metadata"></a> [validation\_service\_bedoccupancy\_metadata](#module\_validation\_service\_bedoccupancy\_metadata) | ../../modules/fhir-profiles-metadata | n/a |
-| <a name="module_validation_service_core"></a> [validation\_service\_core](#module\_validation\_service\_core) | ../../modules/helm_deployment | n/a |
-| <a name="module_validation_service_core_metadata"></a> [validation\_service\_core\_metadata](#module\_validation\_service\_core\_metadata) | ../../modules/fhir-profiles-metadata | n/a |
-| <a name="module_validation_service_disease"></a> [validation\_service\_disease](#module\_validation\_service\_disease) | ../../modules/helm_deployment | n/a |
-| <a name="module_validation_service_disease_metadata"></a> [validation\_service\_disease\_metadata](#module\_validation\_service\_disease\_metadata) | ../../modules/fhir-profiles-metadata | n/a |
-| <a name="module_validation_service_igs"></a> [validation\_service\_igs](#module\_validation\_service\_igs) | ../../modules/helm_deployment | n/a |
-| <a name="module_validation_service_igs_metadata"></a> [validation\_service\_igs\_metadata](#module\_validation\_service\_igs\_metadata) | ../../modules/fhir-profiles-metadata | n/a |
-| <a name="module_validation_service_pathogen"></a> [validation\_service\_pathogen](#module\_validation\_service\_pathogen) | ../../modules/helm_deployment | n/a |
-| <a name="module_validation_service_pathogen_metadata"></a> [validation\_service\_pathogen\_metadata](#module\_validation\_service\_pathogen\_metadata) | ../../modules/fhir-profiles-metadata | n/a |
+| <a name="module_validation_service_ars_apps"></a> [validation\_service\_ars\_apps](#module\_validation\_service\_ars\_apps) | ../../modules/validation_service_apps | n/a |
+| <a name="module_validation_service_bedoccupancy_apps"></a> [validation\_service\_bedoccupancy\_apps](#module\_validation\_service\_bedoccupancy\_apps) | ../../modules/validation_service_apps | n/a |
+| <a name="module_validation_service_core_apps"></a> [validation\_service\_core\_apps](#module\_validation\_service\_core\_apps) | ../../modules/validation_service_apps | n/a |
+| <a name="module_validation_service_disease_apps"></a> [validation\_service\_disease\_apps](#module\_validation\_service\_disease\_apps) | ../../modules/validation_service_apps | n/a |
+| <a name="module_validation_service_igs_apps"></a> [validation\_service\_igs\_apps](#module\_validation\_service\_igs\_apps) | ../../modules/validation_service_apps | n/a |
+| <a name="module_validation_service_pathogen_apps"></a> [validation\_service\_pathogen\_apps](#module\_validation\_service\_pathogen\_apps) | ../../modules/validation_service_apps | n/a |
 
 ## Resources
 
@@ -76,13 +70,13 @@ Module responsible for deploying the DEMIS Services Helm Charts in a Kubernetes 
 | [helm_release.futs](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.validation_service](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [kubernetes_secret_v1.ars_pseudo_hash_pepper](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
+| [kubernetes_secret_v1.ars_rabbitmq_credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
 | [kubernetes_secret_v1.ars_secure_queue_encryption_secret](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
 | [kubernetes_secret_v1.database_credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
 | [kubernetes_secret_v1.igs_encryption_certificate](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
 | [kubernetes_secret_v1.minio_credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
 | [kubernetes_secret_v1.pgbouncer_userlist](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
 | [kubernetes_secret_v1.postgresql_tls_certificates](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
-| [kubernetes_secret_v1.rabbit_mq_credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
 | [kubernetes_secret_v1.redis_cus_reader_credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
 | [kubernetes_secret_v1.service_accounts](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
 
@@ -136,8 +130,7 @@ Module responsible for deploying the DEMIS Services Helm Charts in a Kubernetes 
 | <a name="input_project_feature_flags"></a> [project\_feature\_flags](#input\_project\_feature\_flags) | Map of feature flags to enable or disable specific features in the DEMIS deployment. The keys are the names of the feature flags, and the values are booleans indicating whether the feature is enabled (true) or disabled (false). | `map(bool)` | `{}` | no |
 | <a name="input_pull_secrets"></a> [pull\_secrets](#input\_pull\_secrets) | The list of pull secrets to be used for downloading Docker Images | `list(string)` | `[]` | no |
 | <a name="input_pvc_trigger"></a> [pvc\_trigger](#input\_pvc\_trigger) | List of PVC names from module.persistent\_volume\_claims that establishes deploy ordering without known-after-apply propagation. | `list(string)` | `[]` | no |
-| <a name="input_rabbitmq_password"></a> [rabbitmq\_password](#input\_rabbitmq\_password) | The RabbitMQ password for the application | `string` | n/a | yes |
-| <a name="input_rabbitmq_username"></a> [rabbitmq\_username](#input\_rabbitmq\_username) | The RabbitMQ username for the application | `string` | n/a | yes |
+| <a name="input_rabbitmq_ars_password"></a> [rabbitmq\_ars\_password](#input\_rabbitmq\_ars\_password) | The RabbitMQ password for the ARS Service (user: svc-ars-service) | `string` | n/a | yes |
 | <a name="input_redis_cus_reader_password"></a> [redis\_cus\_reader\_password](#input\_redis\_cus\_reader\_password) | The Redis CUS Password (Reader) | `string` | n/a | yes |
 | <a name="input_redis_cus_reader_user"></a> [redis\_cus\_reader\_user](#input\_redis\_cus\_reader\_user) | The Redis CUS User (Reader) | `string` | n/a | yes |
 | <a name="input_reset_values"></a> [reset\_values](#input\_reset\_values) | Reset the values to the ones built into the chart. This will override any custom values and reuse\_values settings. | `bool` | `false` | no |

@@ -31,9 +31,6 @@ virtualServiceHttpRules:
     delegate:
       name: validation-service-${coalesce(profile,"core")}-internal
       namespace: ${namespace}
-%{ if http_timeout_retry_block[coalesce(profile,"core")] != null ~}
-    ${indent(4, http_timeout_retry_block[coalesce(profile,"core")])}
-%{ endif ~}
 %{ endfor ~}
   - match:
     - uri:
@@ -43,6 +40,3 @@ virtualServiceHttpRules:
     delegate:
       name: validation-service-are-internal
       namespace: ${namespace}
-%{ if http_timeout_retry_block["are"] != null ~}
-    ${indent(4, http_timeout_retry_block["are"])}
-%{ endif ~}

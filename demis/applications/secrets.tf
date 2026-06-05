@@ -164,14 +164,16 @@ resource "kubernetes_secret_v1" "service_accounts" {
   immutable = true
 }
 
-resource "kubernetes_secret_v1" "rabbit_mq_credentials" {
+
+resource "kubernetes_secret_v1" "ars_rabbitmq_credentials" {
   metadata {
-    name      = "rabbit-mq-credentials"
+    name      = "ars-rabbitmq-credentials"
     namespace = var.target_namespace
     annotations = {
       checksum = substr(sha256(jsonencode({
-        RABBITMQ_USERNAME = var.rabbitmq_username
-        RABBITMQ_PASSWORD = var.rabbitmq_password
+        SPRING_RABBITMQ_USERNAME     = "svc-ars-service"
+        SPRING_RABBITMQ_PASSWORD     = var.rabbitmq_ars_password
+        SPRING_RABBITMQ_VIRTUAL_HOST = "bulk"
       })), 0, 61)
     }
   }
@@ -179,8 +181,9 @@ resource "kubernetes_secret_v1" "rabbit_mq_credentials" {
   immutable = true
 
   data = {
-    RABBITMQ_USERNAME = var.rabbitmq_username
-    RABBITMQ_PASSWORD = var.rabbitmq_password
+    SPRING_RABBITMQ_USERNAME     = "svc-ars-service"
+    SPRING_RABBITMQ_PASSWORD     = var.rabbitmq_ars_password
+    SPRING_RABBITMQ_VIRTUAL_HOST = "bulk"
   }
 }
 

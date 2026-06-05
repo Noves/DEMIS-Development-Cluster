@@ -1,5 +1,4 @@
 locals {
-  vs_http_rules_file = "http-rules.tftpl.yaml"
   #################################
   # Validation Service Delegation #
   #################################
@@ -9,90 +8,36 @@ locals {
   ## Check if stage-override templates are provided, otherwise use the project-defined ones
   vs_template_istio = fileexists("${var.external_chart_path}/${local.vs_name}/${local.istio_values_file}") ? "${var.external_chart_path}/${local.vs_name}/${local.istio_values_file}" : "${path.module}/${local.vs_name}/${local.istio_values_file}"
 
-  ####################################
-  # Validation Service http template #
-  ####################################
-  vs_template_http_rules = fileexists("${var.external_chart_path}/${local.vs_name}/${local.vs_http_rules_file}") ? "${var.external_chart_path}/${local.vs_name}/${local.vs_http_rules_file}" : "${path.module}/${local.vs_name}/${local.vs_http_rules_file}"
-
   ###########################
   # Validation Service Core #
   ###########################
-  vs_core_name = "${local.vs_name}-core"
-  # Verify whether the service is defined or the deployment is explicitly enabled
+  vs_core_name    = "${local.vs_name}-core"
   vs_core_enabled = contains(local.service_names, local.vs_core_name) ? var.deployment_information[local.vs_core_name].enabled && !local.fhir_core_split_enabled : false
-  ## Check if stage-override templates are provided, otherwise use the project-defined ones
-  vs_core_template_app        = fileexists("${var.external_chart_path}/${local.vs_core_name}/${local.application_values_file}") ? "${var.external_chart_path}/${local.vs_core_name}/${local.application_values_file}" : "${path.module}/${local.vs_core_name}/${local.application_values_file}"
-  vs_core_template_istio      = fileexists("${var.external_chart_path}/${local.vs_core_name}/${local.istio_values_file}") ? "${var.external_chart_path}/${local.vs_core_name}/${local.istio_values_file}" : "${path.module}/${local.vs_core_name}/${local.istio_values_file}"
-  vs_core_template_http_rules = fileexists("${var.external_chart_path}/${local.vs_core_name}/${local.vs_http_rules_file}") ? "${var.external_chart_path}/${local.vs_core_name}/${local.vs_http_rules_file}" : (fileexists("${path.module}/${local.vs_core_name}/${local.vs_http_rules_file}") ? "${path.module}/${local.vs_core_name}/${local.vs_http_rules_file}" : local.vs_template_http_rules)
-  # http timeouts and retries
-  vs_core_http_timeout_retry_block = { core : try(module.http_timeouts_retries.service_timeout_retry_definitions[local.vs_core_name], null) }
-
   ###########################
   # Validation Service IGS  #
   ###########################
-  vs_igs_name = "${local.vs_name}-igs"
-  # Verify whether the service is defined or the deployment is explicitly enabled
+  vs_igs_name    = "${local.vs_name}-igs"
   vs_igs_enabled = contains(local.service_names, local.vs_igs_name) ? var.deployment_information[local.vs_igs_name].enabled : false
-  ## Check if stage-override templates are provided, otherwise use the project-defined ones
-  vs_igs_template_app        = fileexists("${var.external_chart_path}/${local.vs_igs_name}/${local.application_values_file}") ? "${var.external_chart_path}/${local.vs_igs_name}/${local.application_values_file}" : "${path.module}/${local.vs_igs_name}/${local.application_values_file}"
-  vs_igs_template_istio      = fileexists("${var.external_chart_path}/${local.vs_igs_name}/${local.istio_values_file}") ? "${var.external_chart_path}/${local.vs_igs_name}/${local.istio_values_file}" : "${path.module}/${local.vs_igs_name}/${local.istio_values_file}"
-  vs_igs_template_http_rules = fileexists("${var.external_chart_path}/${local.vs_igs_name}/${local.vs_http_rules_file}") ? "${var.external_chart_path}/${local.vs_igs_name}/${local.vs_http_rules_file}" : (fileexists("${path.module}/${local.vs_igs_name}/${local.vs_http_rules_file}") ? "${path.module}/${local.vs_igs_name}/${local.vs_http_rules_file}" : local.vs_template_http_rules)
-  # http timeouts and retries
-  vs_igs_http_timeout_retry_block = { igs : try(module.http_timeouts_retries.service_timeout_retry_definitions[local.vs_igs_name], null) }
-
   ###########################
   # Validation Service ARS  #
   ###########################
-  vs_ars_name = "${local.vs_name}-ars"
-  # Verify whether the service is defined or the deployment is explicitly enabled
+  vs_ars_name    = "${local.vs_name}-ars"
   vs_ars_enabled = contains(local.service_names, local.vs_ars_name) ? var.deployment_information[local.vs_ars_name].enabled : false
-  ## Check if stage-override templates are provided, otherwise use the project-defined ones
-  vs_ars_template_app        = fileexists("${var.external_chart_path}/${local.vs_ars_name}/${local.application_values_file}") ? "${var.external_chart_path}/${local.vs_ars_name}/${local.application_values_file}" : "${path.module}/${local.vs_ars_name}/${local.application_values_file}"
-  vs_ars_template_istio      = fileexists("${var.external_chart_path}/${local.vs_ars_name}/${local.istio_values_file}") ? "${var.external_chart_path}/${local.vs_ars_name}/${local.istio_values_file}" : "${path.module}/${local.vs_ars_name}/${local.istio_values_file}"
-  vs_ars_template_http_rules = fileexists("${var.external_chart_path}/${local.vs_ars_name}/${local.vs_http_rules_file}") ? "${var.external_chart_path}/${local.vs_ars_name}/${local.vs_http_rules_file}" : (fileexists("${path.module}/${local.vs_ars_name}/${local.vs_http_rules_file}") ? "${path.module}/${local.vs_ars_name}/${local.vs_http_rules_file}" : local.vs_template_http_rules)
-  # http timeouts and retries
-  vs_ars_http_timeout_retry_block = { ars : try(module.http_timeouts_retries.service_timeout_retry_definitions[local.vs_ars_name], null) }
-
   ####################################
   # Validation Service Bedoccupancy  #
   ####################################
-  vs_bedoccupancy_name = "${local.vs_name}-bedoccupancy"
-  # Verify whether the service is defined or the deployment is explicitly enabled
+  vs_bedoccupancy_name    = "${local.vs_name}-bedoccupancy"
   vs_bedoccupancy_enabled = contains(local.service_names, local.vs_bedoccupancy_name) ? var.deployment_information[local.vs_bedoccupancy_name].enabled && local.fhir_core_split_enabled : false
-  ## Check if stage-override templates are provided, otherwise use the project-defined ones
-  vs_bedoccupancy_template_app        = fileexists("${var.external_chart_path}/${local.vs_bedoccupancy_name}/${local.application_values_file}") ? "${var.external_chart_path}/${local.vs_bedoccupancy_name}/${local.application_values_file}" : "${path.module}/${local.vs_bedoccupancy_name}/${local.application_values_file}"
-  vs_bedoccupancy_template_istio      = fileexists("${var.external_chart_path}/${local.vs_bedoccupancy_name}/${local.istio_values_file}") ? "${var.external_chart_path}/${local.vs_bedoccupancy_name}/${local.istio_values_file}" : "${path.module}/${local.vs_bedoccupancy_name}/${local.istio_values_file}"
-  vs_bedoccupancy_template_http_rules = fileexists("${var.external_chart_path}/${local.vs_bedoccupancy_name}/${local.vs_http_rules_file}") ? "${var.external_chart_path}/${local.vs_bedoccupancy_name}/${local.vs_http_rules_file}" : (fileexists("${path.module}/${local.vs_bedoccupancy_name}/${local.vs_http_rules_file}") ? "${path.module}/${local.vs_bedoccupancy_name}/${local.vs_http_rules_file}" : local.vs_template_http_rules)
-  # http timeouts and retries
-  vs_bedoccupancy_http_timeout_retry_block = { bedoccupancy : try(module.http_timeouts_retries.service_timeout_retry_definitions[local.vs_bedoccupancy_name], null) }
-
   ###############################
   # Validation Service Disease  #
   ###############################
-  vs_disease_name = "${local.vs_name}-disease"
-  # Verify whether the service is defined or the deployment is explicitly enabled
+  vs_disease_name    = "${local.vs_name}-disease"
   vs_disease_enabled = contains(local.service_names, local.vs_disease_name) ? var.deployment_information[local.vs_disease_name].enabled && local.fhir_core_split_enabled : false
-  ## Check if stage-override templates are provided, otherwise use the project-defined ones
-  vs_disease_template_app        = fileexists("${var.external_chart_path}/${local.vs_disease_name}/${local.application_values_file}") ? "${var.external_chart_path}/${local.vs_disease_name}/${local.application_values_file}" : "${path.module}/${local.vs_disease_name}/${local.application_values_file}"
-  vs_disease_template_istio      = fileexists("${var.external_chart_path}/${local.vs_disease_name}/${local.istio_values_file}") ? "${var.external_chart_path}/${local.vs_disease_name}/${local.istio_values_file}" : "${path.module}/${local.vs_disease_name}/${local.istio_values_file}"
-  vs_disease_template_http_rules = fileexists("${var.external_chart_path}/${local.vs_disease_name}/${local.vs_http_rules_file}") ? "${var.external_chart_path}/${local.vs_disease_name}/${local.vs_http_rules_file}" : (fileexists("${path.module}/${local.vs_disease_name}/${local.vs_http_rules_file}") ? "${path.module}/${local.vs_disease_name}/${local.vs_http_rules_file}" : local.vs_template_http_rules)
-  # http timeouts and retries
-  vs_disease_http_timeout_retry_block = { disease : try(module.http_timeouts_retries.service_timeout_retry_definitions[local.vs_disease_name], null) }
-
   ################################
   # Validation Service Pathogen  #
   ################################
-  vs_pathogen_name = "${local.vs_name}-pathogen"
-  # Verify whether the service is defined or the deployment is explicitly enabled
+  vs_pathogen_name    = "${local.vs_name}-pathogen"
   vs_pathogen_enabled = contains(local.service_names, local.vs_pathogen_name) ? var.deployment_information[local.vs_pathogen_name].enabled && local.fhir_core_split_enabled : false
-  ## Check if stage-override templates are provided, otherwise use the project-defined ones
-  vs_pathogen_template_app        = fileexists("${var.external_chart_path}/${local.vs_pathogen_name}/${local.application_values_file}") ? "${var.external_chart_path}/${local.vs_pathogen_name}/${local.application_values_file}" : "${path.module}/${local.vs_pathogen_name}/${local.application_values_file}"
-  vs_pathogen_template_istio      = fileexists("${var.external_chart_path}/${local.vs_pathogen_name}/${local.istio_values_file}") ? "${var.external_chart_path}/${local.vs_pathogen_name}/${local.istio_values_file}" : "${path.module}/${local.vs_pathogen_name}/${local.istio_values_file}"
-  vs_pathogen_template_http_rules = fileexists("${var.external_chart_path}/${local.vs_pathogen_name}/${local.vs_http_rules_file}") ? "${var.external_chart_path}/${local.vs_pathogen_name}/${local.vs_http_rules_file}" : (fileexists("${path.module}/${local.vs_pathogen_name}/${local.vs_http_rules_file}") ? "${path.module}/${local.vs_pathogen_name}/${local.vs_http_rules_file}" : local.vs_template_http_rules)
-  # http timeouts and retries
-  vs_pathogen_http_timeout_retry_block = { pathogen : try(module.http_timeouts_retries.service_timeout_retry_definitions[local.vs_pathogen_name], null) }
-
-  vs_http_timeout_retry_block = merge(local.vs_core_http_timeout_retry_block, local.vs_igs_http_timeout_retry_block, local.vs_ars_http_timeout_retry_block, local.vs_bedoccupancy_http_timeout_retry_block, local.vs_disease_http_timeout_retry_block, local.vs_pathogen_http_timeout_retry_block)
 }
 
 # Creates the Virtual Service for the Validation Service delegates
@@ -114,336 +59,241 @@ resource "helm_release" "validation_service" {
   wait_for_jobs       = true
   cleanup_on_fail     = true
   values = [templatefile(local.vs_template_istio, {
-    namespace                = var.target_namespace
-    http_timeout_retry_block = local.vs_http_timeout_retry_block
-    fhir_core_split_enabled  = local.fhir_core_split_enabled
+    namespace               = var.target_namespace
+    fhir_core_split_enabled = local.fhir_core_split_enabled
   })]
   timeout = 600
   lifecycle {
     create_before_destroy = true
   }
 
-  depends_on = [module.validation_service_core[0], module.validation_service_igs[0], module.validation_service_ars[0], module.validation_service_bedoccupancy[0], module.validation_service_disease[0], module.validation_service_pathogen[0]]
+  depends_on = [module.validation_service_core_apps, module.validation_service_igs_apps, module.validation_service_ars_apps, module.validation_service_bedoccupancy_apps, module.validation_service_disease_apps, module.validation_service_pathogen_apps]
 }
 
-module "validation_service_core_metadata" {
-  source = "../../modules/fhir-profiles-metadata"
-  count  = local.vs_core_enabled ? 1 : 0
-
-  profile_type              = "fhir-profile-snapshots"
-  deployment_information    = var.deployment_information[local.vs_core_name]
-  default_profile_snapshots = local.fhir_profile_snapshots
-  provisioning_mode         = var.profile_provisioning_mode_vs_core
+moved {
+  from = module.validation_service_core[0].helm_release.chart
+  to   = module.validation_service_core_apps[0].module.validation_service_legacy[0].helm_release.chart
+}
+moved {
+  from = module.validation_service_core[0].helm_release.istio[0]
+  to   = module.validation_service_core_apps[0].helm_release.istio
 }
 
-locals {
-  vs_core_http_rules = local.vs_core_enabled ? templatefile(local.vs_core_template_http_rules, {
-    subsets = module.validation_service_core_metadata[0].destination_subsets
-  }) : ""
-}
-
-module "validation_service_core" {
-  source = "../../modules/helm_deployment"
-
+module "validation_service_core_apps" {
   # Deploy if enabled
-  count = local.vs_core_enabled ? 1 : 0
+  count      = local.vs_core_enabled ? 1 : 0
+  depends_on = [module.package_registry]
 
-  namespace              = var.target_namespace
-  application_name       = local.vs_core_name
-  deployment_information = var.deployment_information[local.vs_core_name]
-  helm_settings          = local.common_helm_release_settings
-  depends_on             = [module.package_registry]
-  # Pass the values for the chart
-  application_values = templatefile(local.vs_core_template_app, {
+  source                      = "../../modules/validation_service_apps"
+  name                        = local.vs_core_name
+  deployment_information      = var.deployment_information[local.vs_core_name]
+  helm_release_settings       = local.common_helm_release_settings
+  target_namespace            = var.target_namespace
+  external_template_directory = var.external_chart_path
+  local_template_directory    = path.module
+  profile_provisioning_mode   = var.profile_provisioning_mode_vs_core
+  feature_flags               = var.feature_flags
+  config_options              = var.config_options
+  resource_definitions        = var.resource_definitions
+  timeout_retries             = module.http_timeouts_retries.service_timeout_retry_definitions
+  package_type                = "fhir-profile-snapshots"
+  app_template_params = {
     image_pull_secrets                                 = var.pull_secrets,
     repository                                         = var.docker_registry,
     debug_enable                                       = var.debug_enabled,
     istio_enable                                       = var.istio_enabled,
-    profile_version                                    = local.fhir_profile_snapshots,
     profile_docker_registry                            = var.docker_registry,
-    feature_flags                                      = try(var.feature_flags[local.vs_core_name], {}),
-    config_options                                     = try(var.config_options[local.vs_core_name], {}),
-    replica_count                                      = var.resource_definitions[local.vs_core_name].replicas,
-    resource_block                                     = var.resource_definitions[local.vs_core_name].resource_block,
-    profile_versions                                   = module.validation_service_core_metadata[0].current_profile_versions,
-    provisioning_mode                                  = var.profile_provisioning_mode_vs_core,
     feature_flag_new_istio_sidecar_requests_and_limits = try(var.feature_flags[local.vs_core_name].FEATURE_FLAG_NEW_ISTIO_SIDECAR_REQUEST_AND_LIMITS, false)
-    istio_proxy_resources                              = var.resource_definitions[local.vs_core_name].istio_proxy_resources,
-    namespace                                          = var.target_namespace
-  })
-  istio_values = templatefile(local.vs_core_template_istio, {
-    namespace                         = var.target_namespace,
-    custom_virtual_service_http_rules = local.vs_core_http_rules,
-    custom_destination_subsets        = try(module.validation_service_core_metadata[0].destination_subsets, {}),
-    destinationSubsets                = try(yamlencode(module.validation_service_core_metadata[0].destination_subsets), "")
-  })
+  }
+  istio_template_params = {}
 }
 
-module "validation_service_igs_metadata" {
-  source = "../../modules/fhir-profiles-metadata"
-  count  = local.vs_igs_enabled ? 1 : 0
-
-  profile_type              = "igs-profile-snapshots"
-  deployment_information    = var.deployment_information[local.vs_igs_name]
-  default_profile_snapshots = local.igs_profile_snapshots
-  provisioning_mode         = var.profile_provisioning_mode_vs_igs
+moved {
+  from = module.validation_service_igs[0].helm_release.chart
+  to   = module.validation_service_igs_apps[0].module.validation_service_legacy[0].helm_release.chart
+}
+moved {
+  from = module.validation_service_igs[0].helm_release.istio[0]
+  to   = module.validation_service_igs_apps[0].helm_release.istio
 }
 
-locals {
-  vs_igs_http_rules = local.vs_igs_enabled ? templatefile(local.vs_igs_template_http_rules, {
-    subsets = module.validation_service_igs_metadata[0].destination_subsets
-  }) : ""
-}
-
-module "validation_service_igs" {
-  source = "../../modules/helm_deployment"
-
+module "validation_service_igs_apps" {
   # Deploy if enabled
-  count                  = local.vs_igs_enabled ? 1 : 0
-  namespace              = var.target_namespace
-  application_name       = local.vs_igs_name
-  deployment_information = var.deployment_information[local.vs_igs_name]
-  helm_settings          = local.common_helm_release_settings
-  depends_on             = [module.package_registry]
+  count      = local.vs_igs_enabled ? 1 : 0
+  depends_on = [module.package_registry]
 
-  # Pass the values for the chart
-  application_values = templatefile(local.vs_igs_template_app, {
+  source                      = "../../modules/validation_service_apps"
+  name                        = local.vs_igs_name
+  deployment_information      = var.deployment_information[local.vs_igs_name]
+  helm_release_settings       = local.common_helm_release_settings
+  target_namespace            = var.target_namespace
+  external_template_directory = var.external_chart_path
+  local_template_directory    = path.module
+  profile_provisioning_mode   = var.profile_provisioning_mode_vs_igs
+  feature_flags               = var.feature_flags
+  config_options              = var.config_options
+  resource_definitions        = var.resource_definitions
+  timeout_retries             = module.http_timeouts_retries.service_timeout_retry_definitions
+  package_type                = "igs-profile-snapshots"
+  app_template_params = {
     image_pull_secrets                                 = var.pull_secrets,
     repository                                         = var.docker_registry,
     debug_enable                                       = var.debug_enabled,
     istio_enable                                       = var.istio_enabled,
-    profile_version                                    = local.igs_profile_snapshots,
     profile_docker_registry                            = var.docker_registry,
-    feature_flags                                      = try(var.feature_flags[local.vs_igs_name], {}),
-    config_options                                     = try(var.config_options[local.vs_igs_name], {}),
-    replica_count                                      = var.resource_definitions[local.vs_igs_name].replicas,
-    resource_block                                     = var.resource_definitions[local.vs_igs_name].resource_block,
-    profile_versions                                   = module.validation_service_igs_metadata[0].current_profile_versions,
-    provisioning_mode                                  = var.profile_provisioning_mode_vs_igs,
     feature_flag_new_istio_sidecar_requests_and_limits = try(var.feature_flags[local.vs_igs_name].FEATURE_FLAG_NEW_ISTIO_SIDECAR_REQUEST_AND_LIMITS, false),
-    istio_proxy_resources                              = var.resource_definitions[local.vs_igs_name].istio_proxy_resources,
-    namespace                                          = var.target_namespace
-  })
-  istio_values = templatefile(local.vs_igs_template_istio, {
-    namespace                         = var.target_namespace,
-    custom_virtual_service_http_rules = local.vs_igs_http_rules,
-    custom_destination_subsets        = try(module.validation_service_igs_metadata[0].destination_subsets, {}),
-    destinationSubsets                = try(yamlencode(module.validation_service_igs_metadata[0].destination_subsets), "")
-  })
+  }
+  istio_template_params = {}
 }
 
-module "validation_service_ars_metadata" {
-  source = "../../modules/fhir-profiles-metadata"
-  count  = local.vs_ars_enabled ? 1 : 0
-
-  profile_type              = "ars-profile-snapshots"
-  deployment_information    = var.deployment_information[local.vs_ars_name]
-  default_profile_snapshots = local.ars_profile_snapshots
-  provisioning_mode         = var.profile_provisioning_mode_vs_ars
+moved {
+  from = module.validation_service_ars[0].helm_release.chart
+  to   = module.validation_service_ars_apps[0].module.validation_service_legacy[0].helm_release.chart
+}
+moved {
+  from = module.validation_service_ars[0].helm_release.istio[0]
+  to   = module.validation_service_ars_apps[0].helm_release.istio
 }
 
-locals {
-  vs_ars_http_rules = local.vs_ars_enabled ? templatefile(local.vs_ars_template_http_rules, {
-    subsets = module.validation_service_ars_metadata[0].destination_subsets
-  }) : ""
-}
-
-module "validation_service_ars" {
-  source = "../../modules/helm_deployment"
-
+module "validation_service_ars_apps" {
   # Deploy if enabled
-  count = local.vs_ars_enabled ? 1 : 0
+  count      = local.vs_ars_enabled ? 1 : 0
+  depends_on = [module.package_registry]
 
-  namespace              = var.target_namespace
-  application_name       = local.vs_ars_name
-  deployment_information = var.deployment_information[local.vs_ars_name]
-  helm_settings          = local.common_helm_release_settings
-  depends_on             = [module.package_registry]
-
-  # Pass the values for the chart
-  application_values = templatefile(local.vs_ars_template_app, {
+  source                      = "../../modules/validation_service_apps"
+  name                        = local.vs_ars_name
+  deployment_information      = var.deployment_information[local.vs_ars_name]
+  helm_release_settings       = local.common_helm_release_settings
+  target_namespace            = var.target_namespace
+  external_template_directory = var.external_chart_path
+  local_template_directory    = path.module
+  profile_provisioning_mode   = var.profile_provisioning_mode_vs_ars
+  feature_flags               = var.feature_flags
+  config_options              = var.config_options
+  resource_definitions        = var.resource_definitions
+  timeout_retries             = module.http_timeouts_retries.service_timeout_retry_definitions
+  package_type                = "ars-profile-snapshots"
+  app_template_params = {
     image_pull_secrets                                 = var.pull_secrets,
     repository                                         = var.docker_registry,
     debug_enable                                       = var.debug_enabled,
     istio_enable                                       = var.istio_enabled,
-    profile_version                                    = local.ars_profile_snapshots,
     profile_docker_registry                            = var.docker_registry,
-    feature_flags                                      = try(var.feature_flags[local.vs_ars_name], {}),
-    config_options                                     = try(var.config_options[local.vs_ars_name], {}),
-    replica_count                                      = var.resource_definitions[local.vs_ars_name].replicas,
-    resource_block                                     = var.resource_definitions[local.vs_ars_name].resource_block,
-    profile_versions                                   = module.validation_service_ars_metadata[0].current_profile_versions,
-    provisioning_mode                                  = var.profile_provisioning_mode_vs_ars,
     feature_flag_new_istio_sidecar_requests_and_limits = try(var.feature_flags[local.vs_ars_name].FEATURE_FLAG_NEW_ISTIO_SIDECAR_REQUEST_AND_LIMITS, false),
-    istio_proxy_resources                              = var.resource_definitions[local.vs_ars_name].istio_proxy_resources,
-    namespace                                          = var.target_namespace
-  })
-  istio_values = templatefile(local.vs_ars_template_istio, {
-    namespace                         = var.target_namespace,
-    custom_virtual_service_http_rules = local.vs_ars_http_rules,
-    custom_destination_subsets        = try(module.validation_service_ars_metadata[0].destination_subsets, {}),
-    destinationSubsets                = try(yamlencode(module.validation_service_ars_metadata[0].destination_subsets), "")
-  })
+  }
+  istio_template_params = {}
 }
 
-module "validation_service_bedoccupancy_metadata" {
-  source = "../../modules/fhir-profiles-metadata"
-  count  = local.vs_bedoccupancy_enabled ? 1 : 0
-
-  profile_type              = "fhir-profile-snapshots"
-  deployment_information    = var.deployment_information[local.vs_bedoccupancy_name]
-  default_profile_snapshots = local.fhir_profile_snapshots
-  provisioning_mode         = var.profile_provisioning_mode_vs_bedoccupancy
+moved {
+  from = module.validation_service_bedoccupancy[0].helm_release.chart
+  to   = module.validation_service_bedoccupancy_apps[0].module.validation_service_legacy[0].helm_release.chart
+}
+moved {
+  from = module.validation_service_bedoccupancy[0].helm_release.istio[0]
+  to   = module.validation_service_bedoccupancy_apps[0].helm_release.istio
 }
 
-locals {
-  vs_bedoccupancy_http_rules = local.vs_bedoccupancy_enabled ? templatefile(local.vs_bedoccupancy_template_http_rules, {
-    subsets = module.validation_service_bedoccupancy_metadata[0].destination_subsets
-  }) : ""
-}
-
-module "validation_service_bedoccupancy" {
-  source = "../../modules/helm_deployment"
-
+module "validation_service_bedoccupancy_apps" {
   # Deploy if enabled
-  count = local.vs_bedoccupancy_enabled ? 1 : 0
+  count      = local.vs_bedoccupancy_enabled ? 1 : 0
+  depends_on = [module.package_registry]
 
-  namespace              = var.target_namespace
-  application_name       = local.vs_bedoccupancy_name
-  deployment_information = var.deployment_information[local.vs_bedoccupancy_name]
-  helm_settings          = local.common_helm_release_settings
-  depends_on             = [module.package_registry]
-
-  # Pass the values for the chart
-  application_values = templatefile(local.vs_bedoccupancy_template_app, {
+  source                      = "../../modules/validation_service_apps"
+  name                        = local.vs_bedoccupancy_name
+  deployment_information      = var.deployment_information[local.vs_bedoccupancy_name]
+  helm_release_settings       = local.common_helm_release_settings
+  target_namespace            = var.target_namespace
+  external_template_directory = var.external_chart_path
+  local_template_directory    = path.module
+  feature_flags               = var.feature_flags
+  config_options              = var.config_options
+  resource_definitions        = var.resource_definitions
+  profile_provisioning_mode   = var.profile_provisioning_mode_vs_bedoccupancy
+  timeout_retries             = module.http_timeouts_retries.service_timeout_retry_definitions
+  package_type                = "fhir-profile-snapshots"
+  app_template_params = {
     image_pull_secrets                                 = var.pull_secrets,
     repository                                         = var.docker_registry,
     debug_enable                                       = var.debug_enabled,
     istio_enable                                       = var.istio_enabled,
-    profile_version                                    = element(module.validation_service_bedoccupancy_metadata[0].current_profile_versions, -1),
     profile_docker_registry                            = var.docker_registry,
-    feature_flags                                      = try(var.feature_flags[local.vs_bedoccupancy_name], {}),
-    config_options                                     = try(var.config_options[local.vs_bedoccupancy_name], {}),
-    replica_count                                      = var.resource_definitions[local.vs_bedoccupancy_name].replicas,
-    resource_block                                     = var.resource_definitions[local.vs_bedoccupancy_name].resource_block,
-    profile_versions                                   = module.validation_service_bedoccupancy_metadata[0].current_profile_versions,
-    provisioning_mode                                  = var.profile_provisioning_mode_vs_bedoccupancy,
     feature_flag_new_istio_sidecar_requests_and_limits = try(var.feature_flags[local.vs_bedoccupancy_name].FEATURE_FLAG_NEW_ISTIO_SIDECAR_REQUEST_AND_LIMITS, false)
-    istio_proxy_resources                              = var.resource_definitions[local.vs_bedoccupancy_name].istio_proxy_resources,
-    namespace                                          = var.target_namespace
-  })
-  istio_values = templatefile(local.vs_bedoccupancy_template_istio, {
-    namespace                         = var.target_namespace,
-    custom_virtual_service_http_rules = local.vs_bedoccupancy_http_rules
-    custom_destination_subsets        = try(module.validation_service_bedoccupancy_metadata[0].destination_subsets, {}),
-    destinationSubsets                = try(yamlencode(module.validation_service_bedoccupancy_metadata[0].destination_subsets), "")
-  })
+  }
+  istio_template_params = {}
 }
 
-module "validation_service_disease_metadata" {
-  source = "../../modules/fhir-profiles-metadata"
-  count  = local.vs_disease_enabled ? 1 : 0
-
-  profile_type              = "fhir-profile-snapshots"
-  deployment_information    = var.deployment_information[local.vs_disease_name]
-  default_profile_snapshots = local.fhir_profile_snapshots
-  provisioning_mode         = var.profile_provisioning_mode_vs_disease
+moved {
+  from = module.validation_service_disease[0].helm_release.chart
+  to   = module.validation_service_disease_apps[0].module.validation_service_legacy[0].helm_release.chart
+}
+moved {
+  from = module.validation_service_disease[0].helm_release.istio[0]
+  to   = module.validation_service_disease_apps[0].helm_release.istio
 }
 
-locals {
-  vs_disease_http_rules = local.vs_disease_enabled ? templatefile(local.vs_disease_template_http_rules, {
-    subsets = module.validation_service_disease_metadata[0].destination_subsets
-  }) : ""
-}
-
-module "validation_service_disease" {
-  source = "../../modules/helm_deployment"
-
+module "validation_service_disease_apps" {
   # Deploy if enabled
-  count = local.vs_disease_enabled ? 1 : 0
+  count      = local.vs_disease_enabled ? 1 : 0
+  depends_on = [module.package_registry]
 
-  namespace              = var.target_namespace
-  application_name       = local.vs_disease_name
-  deployment_information = var.deployment_information[local.vs_disease_name]
-  helm_settings          = local.common_helm_release_settings
-  depends_on             = [module.package_registry]
-
-  # Pass the values for the chart
-  application_values = templatefile(local.vs_disease_template_app, {
+  source                      = "../../modules/validation_service_apps"
+  name                        = local.vs_disease_name
+  deployment_information      = var.deployment_information[local.vs_disease_name]
+  helm_release_settings       = local.common_helm_release_settings
+  target_namespace            = var.target_namespace
+  external_template_directory = var.external_chart_path
+  local_template_directory    = path.module
+  profile_provisioning_mode   = var.profile_provisioning_mode_vs_disease
+  feature_flags               = var.feature_flags
+  config_options              = var.config_options
+  resource_definitions        = var.resource_definitions
+  timeout_retries             = module.http_timeouts_retries.service_timeout_retry_definitions
+  package_type                = "fhir-profile-snapshots"
+  app_template_params = {
     image_pull_secrets                                 = var.pull_secrets,
     repository                                         = var.docker_registry,
     debug_enable                                       = var.debug_enabled,
     istio_enable                                       = var.istio_enabled,
-    profile_version                                    = element(module.validation_service_disease_metadata[0].current_profile_versions, -1),
     profile_docker_registry                            = var.docker_registry,
-    feature_flags                                      = try(var.feature_flags[local.vs_disease_name], {}),
-    config_options                                     = try(var.config_options[local.vs_disease_name], {}),
-    replica_count                                      = var.resource_definitions[local.vs_disease_name].replicas,
-    resource_block                                     = var.resource_definitions[local.vs_disease_name].resource_block,
-    profile_versions                                   = module.validation_service_disease_metadata[0].current_profile_versions,
-    provisioning_mode                                  = var.profile_provisioning_mode_vs_disease,
     feature_flag_new_istio_sidecar_requests_and_limits = try(var.feature_flags[local.vs_disease_name].FEATURE_FLAG_NEW_ISTIO_SIDECAR_REQUEST_AND_LIMITS, false)
-    istio_proxy_resources                              = var.resource_definitions[local.vs_disease_name].istio_proxy_resources,
-    namespace                                          = var.target_namespace
-  })
-  istio_values = templatefile(local.vs_disease_template_istio, {
-    namespace                         = var.target_namespace,
-    custom_virtual_service_http_rules = local.vs_disease_http_rules
-    custom_destination_subsets        = try(module.validation_service_disease_metadata[0].destination_subsets, {}),
-    destinationSubsets                = try(yamlencode(module.validation_service_disease_metadata[0].destination_subsets), "")
-  })
+  }
+  istio_template_params = {}
 }
 
-module "validation_service_pathogen_metadata" {
-  source = "../../modules/fhir-profiles-metadata"
-  count  = local.vs_pathogen_enabled ? 1 : 0
-
-  profile_type              = "fhir-profile-snapshots"
-  deployment_information    = var.deployment_information[local.vs_pathogen_name]
-  default_profile_snapshots = local.fhir_profile_snapshots
-  provisioning_mode         = var.profile_provisioning_mode_vs_pathogen
+moved {
+  from = module.validation_service_pathogen[0].helm_release.chart
+  to   = module.validation_service_pathogen_apps[0].module.validation_service_legacy[0].helm_release.chart
+}
+moved {
+  from = module.validation_service_pathogen[0].helm_release.istio[0]
+  to   = module.validation_service_pathogen_apps[0].helm_release.istio
 }
 
-locals {
-  vs_pathogen_http_rules = local.vs_pathogen_enabled ? templatefile(local.vs_pathogen_template_http_rules, {
-    subsets = module.validation_service_pathogen_metadata[0].destination_subsets
-  }) : ""
-}
-
-module "validation_service_pathogen" {
-  source = "../../modules/helm_deployment"
-
+module "validation_service_pathogen_apps" {
   # Deploy if enabled
-  count = local.vs_pathogen_enabled ? 1 : 0
+  count      = local.vs_pathogen_enabled ? 1 : 0
+  depends_on = [module.package_registry]
 
-  namespace              = var.target_namespace
-  application_name       = local.vs_pathogen_name
-  deployment_information = var.deployment_information[local.vs_pathogen_name]
-  helm_settings          = local.common_helm_release_settings
-  depends_on             = [module.package_registry]
-
-  # Pass the values for the chart
-  application_values = templatefile(local.vs_pathogen_template_app, {
+  source                      = "../../modules/validation_service_apps"
+  name                        = local.vs_pathogen_name
+  deployment_information      = var.deployment_information[local.vs_pathogen_name]
+  helm_release_settings       = local.common_helm_release_settings
+  target_namespace            = var.target_namespace
+  external_template_directory = var.external_chart_path
+  local_template_directory    = path.module
+  profile_provisioning_mode   = var.profile_provisioning_mode_vs_pathogen
+  feature_flags               = var.feature_flags
+  config_options              = var.config_options
+  resource_definitions        = var.resource_definitions
+  timeout_retries             = module.http_timeouts_retries.service_timeout_retry_definitions
+  package_type                = "fhir-profile-snapshots"
+  app_template_params = {
     image_pull_secrets                                 = var.pull_secrets,
     repository                                         = var.docker_registry,
     debug_enable                                       = var.debug_enabled,
     istio_enable                                       = var.istio_enabled,
-    profile_version                                    = element(module.validation_service_pathogen_metadata[0].current_profile_versions, -1),
     profile_docker_registry                            = var.docker_registry,
-    feature_flags                                      = try(var.feature_flags[local.vs_pathogen_name], {}),
-    config_options                                     = try(var.config_options[local.vs_pathogen_name], {}),
-    replica_count                                      = var.resource_definitions[local.vs_pathogen_name].replicas,
-    resource_block                                     = var.resource_definitions[local.vs_pathogen_name].resource_block,
-    profile_versions                                   = module.validation_service_pathogen_metadata[0].current_profile_versions,
-    provisioning_mode                                  = var.profile_provisioning_mode_vs_pathogen,
     feature_flag_new_istio_sidecar_requests_and_limits = try(var.feature_flags[local.vs_pathogen_name].FEATURE_FLAG_NEW_ISTIO_SIDECAR_REQUEST_AND_LIMITS, false)
-    istio_proxy_resources                              = var.resource_definitions[local.vs_pathogen_name].istio_proxy_resources,
-    namespace                                          = var.target_namespace
-  })
-  istio_values = templatefile(local.vs_pathogen_template_istio, {
-    namespace                         = var.target_namespace,
-    custom_virtual_service_http_rules = local.vs_pathogen_http_rules
-    custom_destination_subsets        = try(module.validation_service_pathogen_metadata[0].destination_subsets, {}),
-    destinationSubsets                = try(yamlencode(module.validation_service_pathogen_metadata[0].destination_subsets), "")
-  })
+  }
+  istio_template_params = {}
 }

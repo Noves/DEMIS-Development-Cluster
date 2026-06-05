@@ -1,0 +1,9 @@
+# Minimal test fixture for validation-service-core app-values
+# Only references variables that are always supplied by validation-service-apps/main.tf
+provisioning_mode: ${provisioning_mode}
+app_name: ${app_name}
+profile_versions: ${jsonencode(profile_versions)}
+feature_flags: ${jsonencode(feature_flags)}
+config_options: ${jsonencode(config_options)}
+replica_count: ${replica_count != null ? replica_count : 1}
+

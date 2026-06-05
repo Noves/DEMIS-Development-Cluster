@@ -1,0 +1,6 @@
+# Minimal test fixture for http-rules
+# Renders one comment line per subset so the output is a non-empty YAML comment string.
+%{ for subset in concat(tolist(subsets.main), tolist(subsets.canary)) ~}
+# subset: ${subset.name} mode:${subset.mode}
+%{ endfor ~}
+

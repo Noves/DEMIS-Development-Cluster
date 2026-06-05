@@ -19,8 +19,7 @@ Module responsible for deploying the ARE Services Helm Charts in a Kubernetes Cl
 | <a name="module_http_timeouts_retries"></a> [http\_timeouts\_retries](#module\_http\_timeouts\_retries) | ../../modules/http_timeouts_retries | n/a |
 | <a name="module_notification_are_gateway"></a> [notification\_are\_gateway](#module\_notification\_are\_gateway) | ../../modules/helm_deployment | n/a |
 | <a name="module_portal_are"></a> [portal\_are](#module\_portal\_are) | ../../modules/helm_deployment | n/a |
-| <a name="module_validation_service_are"></a> [validation\_service\_are](#module\_validation\_service\_are) | ../../modules/helm_deployment | n/a |
-| <a name="module_validation_service_are_metadata"></a> [validation\_service\_are\_metadata](#module\_validation\_service\_are\_metadata) | ../../modules/fhir-profiles-metadata | n/a |
+| <a name="module_validation_service_are_apps"></a> [validation\_service\_are\_apps](#module\_validation\_service\_are\_apps) | ../../modules/validation_service_apps | n/a |
 
 ## Resources
 
