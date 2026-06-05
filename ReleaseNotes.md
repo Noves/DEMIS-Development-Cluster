@@ -2,6 +2,18 @@
 
 # Release Notes DEMIS Kubernetes Environment
 
+## Release 5.9.0
+- added new RabbitMQ user credentials for ARS, Bulk-Inbound-Service and Secure-Message-Gateway
+- fixed ARE ANPS routing configuration
+- fixed templates for validation services (igs and ars) for correct affinity configuration and istio template for bulk-inbound-service
+- fixed missing references to futs-istio resource to be available for other services on deployment
+- documented -m parameter of update-service-local.sh script for patching multiple matching deployments at once
+- added new module for validation service handling, now deployments of validation services depending on profile provisioning mode will be managed by terraform
+  - configurations like feature-flags, config-options, resource definitions and timeouts and retries could be addressed to specific validation service by package major version (e.g. validation-service-bedoccupancy:v6 for bedoccupancy package 6.X.X)
+  - all futs and validation service modules needs to define profiles in main section with at least one defined package version
+- added improvements of tests on fhir-profile-metadata and helm_deployment modules
+- removed ignoring cronjobs kiali for referencing scheduled jobs
+
 ## Release 5.8.0
 - added ARE deployment targets for TEST-Stage
 - changed ARE FHIR package name

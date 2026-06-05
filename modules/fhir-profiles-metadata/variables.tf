@@ -29,6 +29,16 @@ variable "deployment_information" {
   }
 
   validation {
+    condition     = length(var.deployment_information.main.profiles) > 0
+    error_message = "Service Configuration is not valid. Please recheck versions for profiles syntax in main. If profiles are defined, at least one profile version needs to be provided."
+  }
+
+  validation {
+    condition     = !can(length(var.deployment_information.canary.profiles)) || length(var.deployment_information.canary.profiles) > 0
+    error_message = "Service Configuration is not valid. Please recheck versions for profiles syntax in canary. If profiles are defined, at least one profile version needs to be provided."
+  }
+
+  validation {
     condition = alltrue([
       for name, service in var.deployment_information : true &&
       (!can(length(service.canary.profiles)) || (can(length(service.canary.version) > 0) || !can(service.canary.weight >= 0 && service.canary.weight <= 100)))
@@ -43,15 +53,6 @@ variable "profile_type" {
   validation {
     condition     = contains(["fhir-profile-snapshots", "igs-profile-snapshots", "ars-profile-snapshots", "are-profile-snapshots"], var.profile_type)
     error_message = "The profile type must be one of the following: fhir-profile-snapshots, igs-profile-snapshots, ars-profile-snapshots, are-profile-snapshots"
-  }
-}
-
-variable "default_profile_snapshots" {
-  description = "The version of the FHIR Profile Snapshots to use for fallback"
-  type        = string
-  validation {
-    condition     = can(regex("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$", var.default_profile_snapshots)) == true
-    error_message = "The FHIR Profile Snapshots version must be in the format X.Y.Z[-suffix][+build]"
   }
 }
 

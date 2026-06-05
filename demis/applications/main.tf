@@ -23,12 +23,7 @@ locals {
     reset_values                  = var.reset_values
     deployment_timeout            = var.deployment_timeout
   }
-  # The version of the FHIR Profile Snapshots to use
-  fhir_profile_snapshots = var.deployment_information["fhir-profile-snapshots"].main.version
-  # The version of the IGS Profile Snapshots to use
-  igs_profile_snapshots = var.deployment_information["igs-profile-snapshots"].main.version
-  # The version of the ARS Profile Snapshots to use
-  ars_profile_snapshots = var.deployment_information["ars-profile-snapshots"].main.version
+
   # The version of the Routing Data to use
   routing_data_version = var.deployment_information["notification-routing-data"].main.version
   # FEATURE_FLAG_FHIR_CORE_SPLIT

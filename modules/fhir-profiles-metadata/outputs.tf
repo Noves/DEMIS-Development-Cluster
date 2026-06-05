@@ -4,7 +4,7 @@ output "destination_subsets" {
 }
 
 output "current_profile_versions" {
-  value       = try(var.deployment_information.canary.version, null) == null ? local.main_profiles : local.canary_profiles
+  value       = try(var.deployment_information.canary.version, null) == null ? (length(local.non_canary_extra_profiles) == 0 ? local.main_profiles : local.non_canary_extra_profiles) : local.canary_profiles
   description = "values for the current profile versions depending on the is_canary flag"
 }
 

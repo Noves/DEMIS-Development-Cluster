@@ -41,5 +41,8 @@ module "http_timeouts_retries" {
     merge({ service = local.vs_core_name }, local.common_timeout_retry_value),
     merge({ service = local.vs_igs_name }, local.common_timeout_retry_value),
     merge({ service = local.vs_ars_name }, local.common_timeout_retry_value),
+    merge({ service = local.vs_bedoccupancy_name }, local.common_timeout_retry_value),
+    merge({ service = local.vs_disease_name }, local.common_timeout_retry_value),
+    merge({ service = local.vs_pathogen_name }, local.common_timeout_retry_value),
   ]
 }

@@ -17,6 +17,7 @@ module "pdfgen_service" {
   application_name       = local.pdfgen_name
   deployment_information = var.deployment_information[local.pdfgen_name]
   helm_settings          = local.common_helm_release_settings
+  depends_on             = [helm_release.futs[0]]
 
   # Pass the values for the chart
   application_values = templatefile(local.pdfgen_template_app, {

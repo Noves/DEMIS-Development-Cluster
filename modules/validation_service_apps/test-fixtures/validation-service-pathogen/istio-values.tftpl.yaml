@@ -1,0 +1,4 @@
+# Minimal test fixture for validation-service-core istio-values
+app_name: ${app_name}
+namespace: ${namespace}
+

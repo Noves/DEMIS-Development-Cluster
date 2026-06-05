@@ -29,10 +29,12 @@ Module responsible for deploying the DEMIS Services Helm Charts in a Kubernetes 
 | [kubernetes_secret_v1.ars_bis_in_queue_encryption_secret](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
 | [kubernetes_secret_v1.ars_bulk_upload_hmac_secret](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
 | [kubernetes_secret_v1.ars_smg_secure_queue_encryption_secret](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
+| [kubernetes_secret_v1.bis_rabbitmq_credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
 | [kubernetes_secret_v1.database_credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
 | [kubernetes_secret_v1.pgbouncer_userlist](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
 | [kubernetes_secret_v1.postgresql_tls_certificates](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
-| [kubernetes_secret_v1.rabbit_mq_credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
+| [kubernetes_secret_v1.rabbitmq_admin_credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
+| [kubernetes_secret_v1.smg_rabbitmq_credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret_v1) | resource |
 | [terraform_data.check_odd_replicas](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) | resource |
 
 ## Inputs
@@ -70,11 +72,16 @@ Module responsible for deploying the DEMIS Services Helm Charts in a Kubernetes 
 | <a name="input_project_feature_flags"></a> [project\_feature\_flags](#input\_project\_feature\_flags) | Map of feature flags to enable or disable specific features in the DEMIS deployment. The keys are the names of the feature flags, and the values are booleans indicating whether the feature is enabled (true) or disabled (false). | `map(bool)` | `{}` | no |
 | <a name="input_pull_secrets"></a> [pull\_secrets](#input\_pull\_secrets) | The list of pull secrets to be used for downloading Docker Images | `list(string)` | `[]` | no |
 | <a name="input_pvc_trigger"></a> [pvc\_trigger](#input\_pvc\_trigger) | List of PVC names from module.persistent\_volume\_claims that establishes deploy ordering without known-after-apply propagation. | `list(string)` | `[]` | no |
+| <a name="input_rabbitmq_admin_password"></a> [rabbitmq\_admin\_password](#input\_rabbitmq\_admin\_password) | The RabbitMQ admin password | `string` | n/a | yes |
+| <a name="input_rabbitmq_admin_password_hash"></a> [rabbitmq\_admin\_password\_hash](#input\_rabbitmq\_admin\_password\_hash) | The RabbitMQ admin password hash for definitions.json | `string` | n/a | yes |
+| <a name="input_rabbitmq_admin_username"></a> [rabbitmq\_admin\_username](#input\_rabbitmq\_admin\_username) | The RabbitMQ admin username (user: rabbitmq-admin) | `string` | n/a | yes |
+| <a name="input_rabbitmq_ars_password_hash"></a> [rabbitmq\_ars\_password\_hash](#input\_rabbitmq\_ars\_password\_hash) | The RabbitMQ password hash for the ARS Service | `string` | n/a | yes |
+| <a name="input_rabbitmq_bis_password"></a> [rabbitmq\_bis\_password](#input\_rabbitmq\_bis\_password) | The RabbitMQ password for the Bulk Inbound Service (user: bulk-inbound-service) | `string` | n/a | yes |
+| <a name="input_rabbitmq_bis_password_hash"></a> [rabbitmq\_bis\_password\_hash](#input\_rabbitmq\_bis\_password\_hash) | The RabbitMQ password hash for the Bulk Inbound Service | `string` | n/a | yes |
 | <a name="input_rabbitmq_erlang_cookie"></a> [rabbitmq\_erlang\_cookie](#input\_rabbitmq\_erlang\_cookie) | The RabbitMQ Erlang cookie for the application | `string` | n/a | yes |
-| <a name="input_rabbitmq_password"></a> [rabbitmq\_password](#input\_rabbitmq\_password) | The RabbitMQ password for the application | `string` | n/a | yes |
-| <a name="input_rabbitmq_password_hash"></a> [rabbitmq\_password\_hash](#input\_rabbitmq\_password\_hash) | The RabbitMQ password hash for the application | `string` | n/a | yes |
 | <a name="input_rabbitmq_pvc_config"></a> [rabbitmq\_pvc\_config](#input\_rabbitmq\_pvc\_config) | Defines the configuration for RabbitMQ PVCs | <pre>object({<br/>    storageClass = string<br/>    capacity     = string<br/>    accessModes  = list(string)<br/>  })</pre> | n/a | yes |
-| <a name="input_rabbitmq_username"></a> [rabbitmq\_username](#input\_rabbitmq\_username) | The RabbitMQ username for the application | `string` | n/a | yes |
+| <a name="input_rabbitmq_smg_password"></a> [rabbitmq\_smg\_password](#input\_rabbitmq\_smg\_password) | The RabbitMQ password for the Secure Message Gateway (user: svc-secure-message-gateway) | `string` | n/a | yes |
+| <a name="input_rabbitmq_smg_password_hash"></a> [rabbitmq\_smg\_password\_hash](#input\_rabbitmq\_smg\_password\_hash) | The RabbitMQ password hash for the Secure Message Gateway | `string` | n/a | yes |
 | <a name="input_reset_values"></a> [reset\_values](#input\_reset\_values) | Reset the values to the ones built into the chart. This will override any custom values and reuse\_values settings. | `bool` | `false` | no |
 | <a name="input_resource_definitions"></a> [resource\_definitions](#input\_resource\_definitions) | Defines a list of definition of resources that belong to a service | <pre>map(object({<br/>    resource_block = optional(string)<br/>    istio_proxy_resources = optional(object({<br/>      limits   = optional(map(string))<br/>      requests = optional(map(string))<br/>    }))<br/>    replicas = number<br/>  }))</pre> | `{}` | no |
 | <a name="input_target_namespace"></a> [target\_namespace](#input\_target\_namespace) | The namespace to deploy the application to | `string` | `"demis"` | no |

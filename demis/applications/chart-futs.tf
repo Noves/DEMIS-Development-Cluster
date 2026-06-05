@@ -118,10 +118,9 @@ module "futs_core_metadata" {
   source = "../../modules/fhir-profiles-metadata"
   count  = local.futs_core_enabled ? 1 : 0
 
-  profile_type              = "fhir-profile-snapshots"
-  deployment_information    = var.deployment_information[local.futs_core_name]
-  default_profile_snapshots = local.fhir_profile_snapshots
-  provisioning_mode         = "distributed"
+  profile_type           = "fhir-profile-snapshots"
+  deployment_information = var.deployment_information[local.futs_core_name]
+  provisioning_mode      = "distributed"
 }
 
 module "futs_core" {
@@ -162,10 +161,9 @@ module "futs_bedoccupancy_metadata" {
   source = "../../modules/fhir-profiles-metadata"
   count  = local.futs_bedoccupancy_enabled ? 1 : 0
 
-  profile_type              = "fhir-profile-snapshots"
-  deployment_information    = var.deployment_information[local.futs_bedoccupancy_name]
-  default_profile_snapshots = local.fhir_profile_snapshots
-  provisioning_mode         = "distributed"
+  profile_type           = "fhir-profile-snapshots"
+  deployment_information = var.deployment_information[local.futs_bedoccupancy_name]
+  provisioning_mode      = "distributed"
 }
 
 module "futs_bedoccupancy" {
@@ -206,10 +204,9 @@ module "futs_disease_metadata" {
   source = "../../modules/fhir-profiles-metadata"
   count  = local.futs_disease_enabled ? 1 : 0
 
-  profile_type              = "fhir-profile-snapshots"
-  deployment_information    = var.deployment_information[local.futs_disease_name]
-  default_profile_snapshots = local.fhir_profile_snapshots
-  provisioning_mode         = "distributed"
+  profile_type           = "fhir-profile-snapshots"
+  deployment_information = var.deployment_information[local.futs_disease_name]
+  provisioning_mode      = "distributed"
 }
 
 module "futs_disease" {
@@ -250,10 +247,9 @@ module "futs_pathogen_metadata" {
   source = "../../modules/fhir-profiles-metadata"
   count  = local.futs_pathogen_enabled ? 1 : 0
 
-  profile_type              = "fhir-profile-snapshots"
-  deployment_information    = var.deployment_information[local.futs_pathogen_name]
-  default_profile_snapshots = local.fhir_profile_snapshots
-  provisioning_mode         = "distributed"
+  profile_type           = "fhir-profile-snapshots"
+  deployment_information = var.deployment_information[local.futs_pathogen_name]
+  provisioning_mode      = "distributed"
 }
 
 module "futs_pathogen" {
@@ -294,10 +290,9 @@ module "futs_igs_metadata" {
   source = "../../modules/fhir-profiles-metadata"
   count  = local.futs_igs_enabled ? 1 : 0
 
-  profile_type              = "igs-profile-snapshots"
-  deployment_information    = var.deployment_information[local.futs_igs_name]
-  default_profile_snapshots = local.igs_profile_snapshots
-  provisioning_mode         = "distributed"
+  profile_type           = "igs-profile-snapshots"
+  deployment_information = var.deployment_information[local.futs_igs_name]
+  provisioning_mode      = "distributed"
 }
 
 module "futs_igs" {

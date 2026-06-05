@@ -8,17 +8,8 @@ appServicePortTarget: 8080
 appServicePortProtocol: TCP
 appServicePortName: http
 
-# Istio Information
-# the List of the Istio Gateway Objects to be used for external cluster access
-virtualServiceGateways:
-  - ${cluster_gateway}
-# the List of the Hostnames/Domains that should match the VirtualService definition (external)
-virtualServiceDomains:
-  - ${core_hostname}
-
 # HTTP Rules for internal endpoints - https://istio.io/latest/docs/reference/config/networking/virtual-service/#HTTPRoute
 # The "route" part is generated using the destination subset information
-%{ if length(istio_rules_block_external) == 0 ~}
 virtualServiceHttpRules:
   - match:
       - uri:
@@ -27,11 +18,4 @@ virtualServiceHttpRules:
       uri: /
 %{ if http_timeout_retry_block != null ~}
     ${indent(4, http_timeout_retry_block)}
-%{ endif ~}
-%{else ~}
-virtualServiceExternalHttpRules:
-%{ for entry in istio_rules_block_external ~}
-  - ${indent(4, yamlencode(entry))}
-    ${indent(4, http_timeout_retry_block)}
-%{ endfor ~}
 %{ endif ~}

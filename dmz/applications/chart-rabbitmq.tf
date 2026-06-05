@@ -35,20 +35,29 @@ module "rabbitmq_service" {
 
   # Pass the values for the chart
   application_values = templatefile(local.rabbitmq_template_app, {
-    image_pull_secrets                                 = var.pull_secrets,
-    repository                                         = var.docker_registry,
-    namespace                                          = var.target_namespace,
-    debug_enable                                       = var.debug_enabled,
-    istio_enable                                       = var.istio_enabled,
-    core_hostname                                      = var.core_hostname,
-    feature_flags                                      = try(var.feature_flags[local.rabbitmq_name], {}),
-    config_options                                     = try(var.config_options[local.rabbitmq_name], {}),
-    replica_count                                      = var.resource_definitions[local.rabbitmq_name].replicas,
-    resource_block                                     = var.resource_definitions[local.rabbitmq_name].resource_block,
-    storage_class                                      = var.rabbitmq_pvc_config.storageClass,
-    volume_capacity                                    = var.rabbitmq_pvc_config.capacity,
-    access_modes                                       = var.rabbitmq_pvc_config.accessModes
-    rabbitmq_password_hash                             = var.rabbitmq_password_hash,
+    image_pull_secrets           = var.pull_secrets,
+    repository                   = var.docker_registry,
+    namespace                    = var.target_namespace,
+    debug_enable                 = var.debug_enabled,
+    istio_enable                 = var.istio_enabled,
+    core_hostname                = var.core_hostname,
+    feature_flags                = try(var.feature_flags[local.rabbitmq_name], {}),
+    config_options               = try(var.config_options[local.rabbitmq_name], {}),
+    replica_count                = var.resource_definitions[local.rabbitmq_name].replicas,
+    resource_block               = var.resource_definitions[local.rabbitmq_name].resource_block,
+    storage_class                = var.rabbitmq_pvc_config.storageClass,
+    volume_capacity              = var.rabbitmq_pvc_config.capacity,
+    access_modes                 = var.rabbitmq_pvc_config.accessModes
+    rabbitmq_admin_password_hash = var.rabbitmq_admin_password_hash,
+    rabbitmq_bis_password_hash   = var.rabbitmq_bis_password_hash,
+    rabbitmq_smg_password_hash   = var.rabbitmq_smg_password_hash,
+    rabbitmq_ars_password_hash   = var.rabbitmq_ars_password_hash,
+    rabbitmq_password_hashes_checksum = substr(sha256(jsonencode({
+      admin = var.rabbitmq_admin_password_hash,
+      bis   = var.rabbitmq_bis_password_hash,
+      smg   = var.rabbitmq_smg_password_hash,
+      ars   = var.rabbitmq_ars_password_hash,
+    })), 0, 61),
     feature_flag_new_istio_sidecar_requests_and_limits = try(var.feature_flags[local.rabbitmq_name].FEATURE_FLAG_NEW_ISTIO_SIDECAR_REQUEST_AND_LIMITS, false)
     istio_proxy_resources                              = var.resource_definitions[local.rabbitmq_name].istio_proxy_resources
   })
@@ -59,5 +68,5 @@ module "rabbitmq_service" {
     demis_hostnames = local.demis_hostnames
   })
 
-  depends_on = [kubernetes_secret_v1.rabbit_mq_credentials]
+  depends_on = [kubernetes_secret_v1.rabbitmq_admin_credentials]
 }

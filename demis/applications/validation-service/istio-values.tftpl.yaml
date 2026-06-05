@@ -32,9 +32,6 @@ virtualServiceHttpRules:
     delegate:
       name: validation-service-${entry.service}-internal
       namespace: ${namespace}
-%{ if http_timeout_retry_block[entry.service] != null ~}
-    ${indent(4, http_timeout_retry_block[entry.service])}
-%{ endif ~}
 %{ endfor ~}
 %{ else ~}
 %{ for profile in [ "", "igs", "ars"] ~}
@@ -61,9 +58,6 @@ virtualServiceHttpRules:
     delegate:
       name: validation-service-${coalesce(profile,"core")}-internal
       namespace: ${namespace}
-%{ if http_timeout_retry_block[coalesce(profile,"core")] != null ~}
-    ${indent(4, http_timeout_retry_block[coalesce(profile,"core")])}
-%{ endif ~}
 %{ endfor ~}
   - match:
     - uri:
@@ -73,7 +67,4 @@ virtualServiceHttpRules:
     delegate:
       name: validation-service-core-internal
       namespace: ${namespace}
-%{ if http_timeout_retry_block["core"] != null ~}
-    ${indent(4, http_timeout_retry_block["core"])}
-%{ endif ~}
 %{ endif ~}

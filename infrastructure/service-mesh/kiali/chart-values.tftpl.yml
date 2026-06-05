@@ -184,7 +184,6 @@ kubernetes_config:
   - .*
   cache_token_namespace_duration: 10
   excluded_workloads:
-  - CronJob
   - DeploymentConfig
   - ReplicationController
   qps: 175

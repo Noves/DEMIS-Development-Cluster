@@ -33,6 +33,7 @@ module "secure_message_gateway" {
     feature_flag_new_istio_sidecar_requests_and_limits = try(var.feature_flags[local.secure_message_gateway_name].FEATURE_FLAG_NEW_ISTIO_SIDECAR_REQUEST_AND_LIMITS, false)
     istio_proxy_resources                              = var.resource_definitions[local.secure_message_gateway_name].istio_proxy_resources
     smg_secure_queue_encryption_secret_checksum        = try(kubernetes_secret_v1.ars_smg_secure_queue_encryption_secret.metadata[0].annotations["checksum"], ""),
+    smg_rabbitmq_credentials_checksum                  = try(kubernetes_secret_v1.smg_rabbitmq_credentials.metadata[0].annotations["checksum"], ""),
   })
   istio_values = templatefile(local.secure_message_gateway_template_istio, {
     namespace                = var.target_namespace,
